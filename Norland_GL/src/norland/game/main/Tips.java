@@ -3,40 +3,49 @@ package norland.game.main;
 import norland.game.main.levels.Level02;
 
 public class Tips {
+
+	//----------------------------------------------------------------------------------
+	// General
 	
-	//General
+	// Level 1
 	public static String objectivesTitle = "Welcome to Norland!";
 	public static String objectives = "The compass surrouding your ship will point you towards your current objective.";
 
+	// Level 1
 	public static String movementTitle = "Traversing The Seas";
 	public static String movement = "Tap anywhere in the ocean and your ship will move towards that location," +
 			" but watch out for rocks, icebergs, and other hazardous obstacles.";
 	
+	// Level 2
 	public static String healthTitle = "Surviving Enemy Attacks";
 	public static String health = "Viking longships are strong, but not invincible. Your ship's health is located at the top of the screen." +
 			" If your ship becomes heavily damaged your crew will perform repairs.";
 	
+	// Level 3
 	public static String attacksTitle = "Attacking Your Enemies";
 	public static String attacks = "Your ship has a powerful front-mounted ballista. Tap in front of your ship" +
 			" to fire an arrow.\n Tap your ship to fire your cannons.\nIcebergs can be broken apart by both of your weapons. " +
 			"First try killing "+ Level02.objectiveCompleteCondition1 + " icebergs with arrows.";	
+	// Level 3
 	public static String attacks2Title = "Attacking Your Enemies";
 	public static String attacks2 = "Fabulous. Now try blasting "+ Level02.objectiveCompleteCondition2 + " icebergs with your cannons.";	
+	
+	// Level 3
 	public static String attacks3Title = "Attacking Your Enemies";
 	public static String attacks3 = "These waters have been cleared. We can now continue our journey home.";	
 	
-	
+	//TODO Remove from Level 8
 	public static String betaTitle = "Congratulations";
 	public static String beta = "Thank you for playing Norland Beta. Please send us feedback using the form in the main menu. " +
 			"We are pretty awesome and will probably listen to your suggestions!\nLevel 9 is a special challenge mission. Enjoy :D";	
 	
-	
-	//Upgrades
+	//----------------------------------------------------------------------------------
+	// Upgrades
 	public static String upgradesTitle = "Upgrades";
 	public static String upgrades = "Earn more points by completing new levels in the campaign." 
 			+ " You can read in-depth descriptions for each upgrade by tapping its title. Upgrade choices are not" +
 			" permanent and can be modified on return to this menu.";
-	//
+	// Arrows
 	public static String arrowDamageTitle= "Arrow Damage";
 	public static String arrowDamage="Increases the damage of each arrow.";
 	
@@ -46,7 +55,7 @@ public class Tips {
 	public static String arrowUberTitle = "Uber Arrows";
 	public static String arrowUber = "All your arrows become fire arrows, this increases their damage and makes them look awesome." +
 			" This upgrade requires all previous arrow upgrades to be complete.";
-	//
+	// Cannons
 	public static String cannonDamageTitle = "Cannon Damage";
 	public static String cannonDamage = "Increases the damage of each cannonball.";
 	
@@ -61,7 +70,8 @@ public class Tips {
 	
 	public static String cannonUberTitle = "Uber Cannons";
 	public static String cannonUber = "Fire two volleys at once. This upgrade requires all previous cannon upgrades to be complete.";	
-	//
+	
+	// Utility
 	public static String shipSpeedTitle = "Ship Speed";
 	public static String shipSpeed = "Increases the ship's movement speed.";
 	
@@ -70,7 +80,8 @@ public class Tips {
 	
 	public static String utilityUberTitle = "Uber Utility";
 	public static String utilityUber = "Periodically drops mines behind the ship. This upgrade requires all previous utility upgrades to be complete.";
-	//
+	
+	// Defense
 	public static String shipHResistTitle = "Hull Resist";
 	public static String shipHResist = "Decreases the damage taken from collisions.";
 	
@@ -82,7 +93,8 @@ public class Tips {
 	
 	public static String defenseUberTitle = "Uber Defense";
 	public static String defenseUber = "Allows the ship to survive collisions with rocks. This upgrade requires all previous defense upgrades to be complete.";	
-	//
+	
+	// Health
 	public static String shipHealthTitle = "Maximum Heatlh";
 	public static String shipHealth = "Increases the total health of the ship.";
 	
@@ -94,7 +106,7 @@ public class Tips {
 			" This upgrade requires all previous health upgrades to be complete.";
 	
 	
-
+	//----------------------------------------------------------------------------------
 	//Enemies
 	public static String vodTitle = "The Vodianoi";
 	public static String vod = "Evil men who live in the wrecks of old ships and prey on passerbys.\n" +

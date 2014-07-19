@@ -644,8 +644,8 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                 if (!onPauseCalled) {
 
                     try {
-                        // If sound is on and the player isn't playing, start
-                        // the music
+                        // If sound is on and the player isn't playing, start the music
+                    	//TODO should call this ONCE on return from menu or something
                         if (!GlMainMenu.mediaPlayer.isPlaying()
                                 && getContext().getSharedPreferences(
                                         MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE)
@@ -661,8 +661,8 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                   				e.printStackTrace();
                   			}
                         }
-                        // If the media player is playing and the sound is off,
-                        // stop the music
+                        // If the media player is playing and the sound is off, stop the music
+                      //TODO should call this ONCE on return from menu or something
                         if (GlMainMenu.mediaPlayer.isPlaying()
                                 && !getContext().getSharedPreferences(
                                         MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE)

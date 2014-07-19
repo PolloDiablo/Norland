@@ -11,8 +11,6 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.view.Window;
 import android.view.WindowManager;
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
 
 public class MainMenu_Activity extends Activity implements Callback {
 
@@ -55,26 +53,14 @@ public class MainMenu_Activity extends Activity implements Callback {
         /*
          * String test = getPackageName(); Log.d("TEST",test);
          */
-	    checkForUpdates();//Hockeyapp
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         MMglSurfaceView.onResume();
-	    checkForCrashes();//Hockeyapp
     }
-    
-	//Hockeyapp
-	private void checkForCrashes() {
-		    CrashManager.register(this, "48c97d2f07821ada6d12696c481f1c4d");
-	}
-	//Hockeyapp
-	private void checkForUpdates() {
-		//TODO Remove this for store builds!
-		UpdateManager.register(this, "48c97d2f07821ada6d12696c481f1c4d");
-	}
-    
+  
 
     @Override
     protected void onPause() {

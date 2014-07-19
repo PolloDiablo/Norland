@@ -558,9 +558,10 @@ import android.view.MotionEvent;
         // Also don't do anything if game is auto-starting next level
         // if(!onPauseCalled && !startNextLevel){
         if (!onPauseCalled) {
-
+        		
             try {
             	//If sound is on and the player isn't playing it means the user just turned the sound on...
+            	//TODO should check this ONCE on return from menu or something
                 if (!mediaPlayer.isPlaying() && getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE,
                                 Context.MODE_PRIVATE).getBoolean(LOCAL_soundOn, true)) {
                     mediaPlayer.release();
@@ -569,7 +570,8 @@ import android.view.MotionEvent;
                     mediaPlayer.setLooping(true);
                 }
                 
-                // If the media player is playing and the sound is off, stop themusic
+                // If the media player is playing and the sound is off, stop the music
+                //TODO should check this ONCE on return from menu or something
                 if (mediaPlayer.isPlaying()
                         && !getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE,
                                 Context.MODE_PRIVATE).getBoolean(LOCAL_soundOn, true)) {
