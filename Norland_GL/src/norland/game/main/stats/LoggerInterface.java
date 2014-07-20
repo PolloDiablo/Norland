@@ -45,6 +45,6 @@ public interface LoggerInterface {
     /**
      * Upload all logged level interactions.
      */
-    public void uploadLoggedStats();
+    public void uploadLoggedStats(Context context);
 
 }
