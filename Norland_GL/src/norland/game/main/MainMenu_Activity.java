@@ -1,5 +1,6 @@
 package norland.game.main;
 
+import norland.game.main.stats.ConcreteLogger;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -9,8 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import ca.casualt.norland.exportformat.CharacterType;
+import ca.casualt.norland.exportformat.LevelNumber;
 
 public class MainMenu_Activity extends Activity implements Callback {
 
@@ -50,6 +54,23 @@ public class MainMenu_Activity extends Activity implements Callback {
 
         isShowingPauseDialog = false;
 
+        // Temp, for testing.
+        {
+            Log.i("TONY_MM", "Starting Fake Level.");
+            ConcreteLogger cl = new ConcreteLogger();
+            cl.startNewLevel(new LevelNumber(5), getApplicationContext());
+            cl.newLevelAttempt();
+            cl.levelKill(CharacterType.Iceberg);
+            cl.attemptOutcome(false);
+            cl.newLevelAttempt();
+            cl.levelKill(CharacterType.Rock);
+            cl.attemptOutcome(true);
+            cl.levelInteractionComplete();
+            Log.i("TONY_MM", "Export Fake Level.");
+            cl.uploadLoggedStats(getApplicationContext());
+            Log.i("TONY_MM", "Ending Fake Level Upload.");
+        }
+
         /*
          * String test = getPackageName(); Log.d("TEST",test);
          */
@@ -60,7 +81,6 @@ public class MainMenu_Activity extends Activity implements Callback {
         super.onResume();
         MMglSurfaceView.onResume();
     }
-  
 
     @Override
     protected void onPause() {

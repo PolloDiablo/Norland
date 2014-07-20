@@ -1,4 +1,4 @@
-package norland.game.main.stats;
+package ca.casualt.norland.exportformat;
 
 /**
  * All the types of characters in the game.

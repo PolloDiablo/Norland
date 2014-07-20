@@ -1,13 +1,10 @@
-package norland.game.main.stats;
+package ca.casualt.norland.exportformat;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import norland.game.main.UpgradeMain;
-import android.content.Context;
-import android.content.SharedPreferences;
 
 /**
  * Level interaction data tracking.
@@ -33,23 +30,31 @@ public class LevelInteraction {
     /**
      * The current user settings.
      */
-    private Map<String, ?> userSettings;
+    private final Map<String, ?> userSettings;
 
-    /**
-     * @param context
-     */
-    public LevelInteraction(final Context context) {
-        timeStart = getCurrentTimeInSeconds();
-        getCurrentUserSettings(context);
+    @SuppressWarnings({
+            "unchecked", "rawtypes"
+    })
+    public LevelInteraction() {
+        this.timeStart = 0;
+        this.userSettings = new HashMap();
     }
 
     /**
-     * Grabs the current user settings from memory.
+     * @param userSettings
      */
-    private void getCurrentUserSettings(final Context context) {
-        SharedPreferences sp = UpgradeMain.getStandardSharedPreferences(context);
-        userSettings = sp.getAll();
+    public LevelInteraction(Map<String, ?> userSettings) {
+        this.timeStart = getCurrentTimeInSeconds();
+        this.userSettings = userSettings;
     }
+
+    // /**
+    // * Grabs the current user settings from memory.
+    // */
+    // private void getCurrentUserSettings(final Context context) {
+    // SharedPreferences sp = UpgradeMain.getStandardSharedPreferences(context);
+    // userSettings = sp.getAll();
+    // }
 
     /**
      * Finished the level interaction.
@@ -94,5 +99,24 @@ public class LevelInteraction {
      */
     public List<LevelAttempt> getLevelAttempts() {
         return levelAttempts;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("LevelInteraction: [levelAttempts=");
+        builder.append(levelAttempts);
+        builder.append(", timeStart=");
+        builder.append(timeStart);
+        builder.append(", timeEnd=");
+        builder.append(timeEnd);
+        builder.append(", userSettings=");
+        builder.append(userSettings);
+        builder.append("]");
+        return builder.toString();
     }
 }
