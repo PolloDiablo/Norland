@@ -36,7 +36,7 @@ public final class ExportHandler {
     /**
      * For sending uploads.
      */
-    private static final String URL = "http://localhost:8888/norlandserver";
+    private static final String URL = "http://192.168.0.18:8888/norlandserver";
 
     /**
      * If true, then always attempt upload no matter what connection the phone
@@ -72,6 +72,7 @@ public final class ExportHandler {
             return false;
         }
         final String jsonBundle = convertForExport(statsBundle);
+        Log.d("Export Handler", "JSON: " + jsonBundle);
         AsyncTask<StatsBundle, Void, Boolean> uploadAsync = new AsyncTask<StatsBundle, Void, Boolean>() {
 
             @Override

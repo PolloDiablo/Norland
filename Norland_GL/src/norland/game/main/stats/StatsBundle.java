@@ -1,5 +1,7 @@
 package norland.game.main.stats;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -9,7 +11,21 @@ import java.util.Stack;
  */
 public final class StatsBundle {
 
+    private final List<LevelInteraction> loggedInteractions;
+
+    /**
+     * The StatsBundle.
+     * 
+     * @param loggedInteractions
+     */
     public StatsBundle(final Stack<LevelInteraction> loggedInteractions) {
-        // TODO Auto-generated constructor stub
+        this.loggedInteractions = new ArrayList<LevelInteraction>(loggedInteractions);
+    }
+
+    /**
+     * @return the loggedInteractions
+     */
+    public List<LevelInteraction> getLoggedInteractions() {
+        return loggedInteractions;
     }
 }
