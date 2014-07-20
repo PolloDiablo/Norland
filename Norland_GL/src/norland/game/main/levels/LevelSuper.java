@@ -1,6 +1,8 @@
 package norland.game.main.levels;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import norland.game.main.GlRenderer;
@@ -105,6 +107,7 @@ public abstract class LevelSuper implements Level  {
 	private static double dirX;
 	private static double dirY;
 	private boolean didKill;
+	
 	public void update() {
 		handleTips();
 		
@@ -151,7 +154,6 @@ public abstract class LevelSuper implements Level  {
 			//Checks projectile collisions
 			for(Projectile p:GlRenderer.projectiles){	
 				//Checks for cannon-cannon collisions and arrow-flame collisions
-	
 					for(Projectile w:GlRenderer.projectiles){
 						if( p!=w && p instanceof Cannonball && !p.isFriendly() && w.isFriendly() && w instanceof Cannonball && p.hasCollided(w,false)){
 							p.setState(State.DYING);
@@ -358,8 +360,8 @@ public abstract class LevelSuper implements Level  {
 		
 		dirX = (objective.getX()-GlRenderer.shipLocX);
         dirY = (objective.getY()-GlRenderer.shipLocY);
-        GlRenderer.compassPointer.setAngle(Math.atan2(dirY, dirX));
-        
+        GlRenderer.compassPointer.setAngle(Math.atan2(dirY, dirX));     
+        GlRenderer.setCompassDistanceText( String.format(Locale.US,"%5.0fm",GlRenderer.viking.distanceTo(objective.getX(),objective.getY())*0.1) );
 	}
 	
 	
@@ -368,7 +370,7 @@ public abstract class LevelSuper implements Level  {
 
 	/**Draws icebergs, rocks, enemies, and objective*/
 	public void onDrawFrame(GL10 gl, Context context) {
-			objective.draw(gl);
+			objective.draw(gl);   
 			//Draw icebergs
 			for(Iceberg i:icebergs){
 				i.draw(gl);

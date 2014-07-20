@@ -49,7 +49,6 @@ public class level09 extends LevelSuper{
 		GlRenderer.weaponsOn=true;
 		GlRenderer.showCompass=false;
 		
-		onlyTestCollisionsEvery4Cycles=0;
 		objectiveNum = new VisualDynamic(300, 140);
 		objectiveKillCount=0;
 		

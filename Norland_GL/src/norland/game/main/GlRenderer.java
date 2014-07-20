@@ -159,6 +159,8 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
 
     // public static Visual compass;
     public static Thing compassPointer;
+    private static VisualDynamic compassDistance;
+    private static String compassDistanceText;
 
     /** Set inside each level */
     public static boolean weaponsOn;
@@ -299,6 +301,8 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
         // compass = new Visual(bitmapCompass, WIDTH - compassOffset, HEIGHT -
         // compassOffset, 64, 64);
         compassPointer = new Thing(bitmapCompassPointer, 0, 0, 440, 440);
+        compassDistance = new VisualDynamic(300, 140);
+        compassDistanceText = "0m";
         showCompass = true;
 
         // Initialize water
@@ -383,6 +387,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
     }
 
     private void chooseLevel() {
+    	desiredAngle = Double.NaN;
         viking.setMoveSpeed(0);
         viking.setAngle(0);
         switch (nextLevel) {
@@ -600,7 +605,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
         myLevel.update();
 
         compassPointer.setX(shipLocX);
-        compassPointer.setY(shipLocY);
+        compassPointer.setY(shipLocY);  
 
         if (!hasFinishedLoading) {
             hasFinishedLoading = true;
@@ -717,22 +722,6 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                     showTip = false;
                 }
 
-                /*
-                 * for (Projectile p : projectiles) { if(!p.hasBeenInitiated){
-                 * Log.d("GlRenderer","Initializing Projectile");
-                 * p.hasBeenInitiated=true; p.initShape(gl, getContext()); }else
-                 * if(!p.hasBeenReinitiated){
-                 * Log.d("GlRenderer","Reinitializing Projectile");
-                 * p.hasBeenReinitiated=true; p.reInitShape(gl, getContext()); }
-                 * } for (Projectile w : wakes) { if(!w.hasBeenInitiated){
-                 * Log.d("GlRenderer","Initializing Wake");
-                 * w.hasBeenInitiated=true; w.initShape(gl, getContext()); }else
-                 * if(!w.hasBeenReinitiated){
-                 * //Log.d("GlRenderer","Reinitializing Wake");
-                 * w.hasBeenReinitiated=true; w.reInitShape(gl, getContext()); }
-                 * }
-                 */
-
                 if (!paused && !runningUpgradeScreen) {
                     for (Projectile p : projectiles) {
                         p.update();
@@ -844,10 +833,13 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                     // - compassOffset + shipLocY - HEIGHT / 2);
                     if (showCompass) {
                         compassPointer.draw(gl);
+            			compassDistance.updateBitmap(gl, getContext(), compassDistanceText);
+                        compassDistance.draw(gl, (GlRenderer.shipLocX - GlRenderer.WIDTH_HALF + GlMainMenu.widthScale*160), 
+                				GlRenderer.shipLocY+GlRenderer.HEIGHT_HALF-GlMainMenu.heightScale*(15));  
                     }
 
-                }// If not running the upgrade screen
-                else if (runningUpgradeScreen) {
+                // If not running the upgrade screen
+            	} else if (runningUpgradeScreen) {
                     gl.glTranslatef(0, 0, -51.6f);
                     upgradeBackground.draw(gl, WIDTH_HALF, HEIGHT_HALF);
                     myUpgradeState.onDrawFrame(gl, getContext());
@@ -940,8 +932,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
         // gl.glFrustumf(-size, size, -size / ratio, size / ratio, 0.01f,
         // 100.0f);
 
-        // Arraylists, visuals, viking, screen width/height stored in variables,
-        // etc.
+        // Arraylists, visuals, viking, screen width/height stored in variables, etc.
         initializeEverything();
 
         // Now initialize shapes (initial vertices creation and texture binding)
@@ -966,11 +957,13 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
         healthBorder.initShape(gl, getContext());
         shieldSymbol.initShape(gl, getContext());
         // scoreDisplay.initShape(gl, getContext());
-        // scoreDisplay.createBitmap(gl, getContext(),
-        // R.drawable.game_background,28);
+        // scoreDisplay.createBitmap(gl, getContext(), R.drawable.game_background,28);
         viking.initShape(gl, getContext());
         // compass.initShape(gl, getContext());
         compassPointer.initShape(gl, getContext());
+    	compassDistance.initShape(gl, getContext());
+    	compassDistance.createBitmap(gl, getContext(),  R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
+    	compassDistance.setTextColour(255, 211,204,19);
 
         myLevel.initiateShapes(gl, getContext());
         upgradeBackground.initShape(gl, getContext());
@@ -1029,20 +1022,18 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
 
     // Called on screen touch to rotate ship
     private void setVikingDir(double x, double y) {
-
         double dirX = x - WIDTH_HALF;
         double dirY = y - HEIGHT_HALF;
         desiredAngle = Math.atan2(dirY, dirX);
-
     }
 
     // Handles touches
     public boolean onTouchEvent(final MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            Log.v("GlRenderer", "Touch Event");
-            if (hasFinishedLoading) {// Only create projectiles and stuff if
-                                     // update() has called at least once
+            Log.d("GlRenderer", "Touch Event");
+            // Only create projectiles and stuff if update() has called at least once
+            if (hasFinishedLoading) {
                 if (!runningUpgradeScreen) {
                     if (Math.abs(event.getX() - WIDTH_HALF) < 64
                             && Math.abs(event.getY() - HEIGHT_HALF) < 64) {
@@ -1069,10 +1060,6 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                         }
 
                     }
-                    /*
-                     * if (event.getX() > WIDTH - 45 && event.getY() > HEIGHT -
-                     * 45) { startUpgradeScreen = true; }
-                     */
 
                 } else {
                     // If running upgrade state:
@@ -1083,13 +1070,6 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                 }
             }// If has finished loading
         }
-        if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            // the gestures
-        }
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            // touch was released
-        }
-
         return true;
     }
 
@@ -1161,4 +1141,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
     	addProjectile(Projectile.getProjectile(fireArrowPrototype));
     }
     
+    public static void setCompassDistanceText(String newText){
+    	compassDistanceText = newText;
+    }
 }

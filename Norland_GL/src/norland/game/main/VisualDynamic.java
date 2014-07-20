@@ -40,7 +40,7 @@ public class VisualDynamic extends Visual{
 		textPaint = new Paint();
 		textPaint.setTextSize((int)(textSize));
 		textPaint.setAntiAlias(true);
-		textPaint.setARGB(0xff, 255, 255, 255);
+		textPaint.setARGB(255, 255, 255, 255);
 
 		//Generate one texture pointer...
 		gl.glGenTextures(1, textures, 0);
@@ -74,5 +74,16 @@ public class VisualDynamic extends Visual{
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, getBitmap(), 0);
 		
 	}	
+	
+	/** 
+	 * Make all of these 0-255. >:l
+	 * @param a
+	 * @param r
+	 * @param g
+	 * @param b
+	 */
+	public void setTextColour(int a, int r, int g, int b){
+		textPaint.setARGB(a, r, g, b);
+	}
 
 }

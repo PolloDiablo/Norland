@@ -51,12 +51,20 @@ public abstract class Projectile extends Thing {
     	}
     	
     	if(projectileClassMap.get(prototype.getClass()).isEmpty()){
-    		return prototype.makeProjectileForPool();
+    		//Log.d("Projectile","Prototype range: " + prototype.getRange());
+    		//TODO Adjusting the range here is really bad
+    		// But if we don't, then the range essentially gets scaled twice
+    		// Should be able to workaround this issue by not having any scale factors at all,
+    		//	and just doing the scaling with the opengl projection matrix
+    		Projectile p = prototype.makeProjectileForPool();
+    		p.range =  prototype.getRange();
+    		return p;
     	}else{
     		Projectile p = projectileClassMap.get(prototype.getClass()).get(0);
     		projectileClassMap.get(prototype.getClass()).remove(0);
     		p.reset(prototype.getX(), prototype.getY(), prototype.getBaseMoveSpeed(),prototype.getAngle());
             p.setDamage(prototype.getDamage());
+            Log.d("Projectile","Prototype range: " + prototype.getRange());
             p.range = prototype.getRange();
             p.distanceTravelled = 0;
             p.setFriendly(prototype.isFriendly()); 

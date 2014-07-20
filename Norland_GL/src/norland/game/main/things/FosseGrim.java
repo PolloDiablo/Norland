@@ -61,7 +61,7 @@ public class FosseGrim extends Thing {
 		    noteTimer++;
             if (noteTimer > noteSeparation&&this.distanceTo(GlRenderer.shipLocX, GlRenderer.shipLocY) < redNotePrototype.getRange()){
             		
-            		double numberOfFires=(1+r.nextFloat()*2);
+            		double numberOfFires=(r.nextFloat()*2);
             		for(i=0;i<numberOfFires;i++){
             			 firePROJ1();
             			 firePROJ2();	 
