@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ca.casualt.norland.exportformat.StatsBundle;
 import ca.casualt.norland.shared.RequestAccess;
 
 @SuppressWarnings("serial")
@@ -21,10 +22,11 @@ public class NorlandServerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // TestDataClass testData = RequestAccess.getData(req,
-        // TestDataClass.class);
         String json = RequestAccess.getData(req);
         System.out.println(json);
+
+        StatsBundle testData = RequestAccess.getData(req, StatsBundle.class);
+        System.out.println(testData);
     }
 
     // private static class TestDataClass {
