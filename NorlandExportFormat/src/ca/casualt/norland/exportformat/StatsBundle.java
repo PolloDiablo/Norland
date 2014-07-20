@@ -13,6 +13,10 @@ public final class StatsBundle {
 
     private final List<LevelInteraction> loggedInteractions;
 
+    public StatsBundle() {
+        loggedInteractions = new ArrayList<LevelInteraction>();
+    }
+
     /**
      * The StatsBundle.
      * 

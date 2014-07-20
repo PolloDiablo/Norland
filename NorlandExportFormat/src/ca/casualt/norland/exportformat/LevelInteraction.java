@@ -2,6 +2,7 @@ package ca.casualt.norland.exportformat;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,14 @@ public class LevelInteraction {
      * The current user settings.
      */
     private final Map<String, ?> userSettings;
+
+    @SuppressWarnings({
+            "unchecked", "rawtypes"
+    })
+    public LevelInteraction() {
+        this.timeStart = 0;
+        this.userSettings = new HashMap();
+    }
 
     /**
      * @param userSettings

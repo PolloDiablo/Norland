@@ -12,6 +12,13 @@ public final class LevelNumber {
     private final int levelNumber;
 
     /**
+     * Default constructor.
+     */
+    public LevelNumber() {
+        levelNumber = 0;
+    }
+
+    /**
      * A level number with this number.
      * 
      * @param levelNumberIn
