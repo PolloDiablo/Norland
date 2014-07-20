@@ -4,6 +4,7 @@ import norland.game.main.levels.Level02;
 
 public class Tips {
 
+	
 	//----------------------------------------------------------------------------------
 	// General
 	
