@@ -32,4 +32,17 @@ public final class StatsBundle {
     public List<LevelInteraction> getLoggedInteractions() {
         return loggedInteractions;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("StatsBundle: [loggedInteractions=");
+        builder.append(loggedInteractions);
+        builder.append("]");
+        return builder.toString();
+    }
 }

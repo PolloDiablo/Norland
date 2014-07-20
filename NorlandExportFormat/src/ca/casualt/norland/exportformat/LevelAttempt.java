@@ -92,4 +92,23 @@ public final class LevelAttempt {
     public KillObject getKills() {
         return kills;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("LevelAttempt: [timeStart=");
+        builder.append(timeStart);
+        builder.append(", timeEnd=");
+        builder.append(timeEnd);
+        builder.append(", success=");
+        builder.append(success);
+        builder.append(", kills=");
+        builder.append(kills);
+        builder.append("]");
+        return builder.toString();
+    }
 }

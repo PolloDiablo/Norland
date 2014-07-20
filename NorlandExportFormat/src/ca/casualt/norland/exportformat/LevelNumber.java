@@ -33,4 +33,17 @@ public final class LevelNumber {
     public int getLevelNumber() {
         return levelNumber;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("LevelNumber: [levelNumber=");
+        builder.append(levelNumber);
+        builder.append("]");
+        return builder.toString();
+    }
 }

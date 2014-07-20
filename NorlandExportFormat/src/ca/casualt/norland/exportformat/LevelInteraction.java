@@ -100,4 +100,23 @@ public class LevelInteraction {
     public List<LevelAttempt> getLevelAttempts() {
         return levelAttempts;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("LevelInteraction: [levelAttempts=");
+        builder.append(levelAttempts);
+        builder.append(", timeStart=");
+        builder.append(timeStart);
+        builder.append(", timeEnd=");
+        builder.append(timeEnd);
+        builder.append(", userSettings=");
+        builder.append(userSettings);
+        builder.append("]");
+        return builder.toString();
+    }
 }

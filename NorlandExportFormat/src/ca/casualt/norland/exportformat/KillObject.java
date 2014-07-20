@@ -13,7 +13,7 @@ public final class KillObject {
     /**
      * Hashmap of all the kill counts.
      */
-    private final EnumMap<CharacterType, Integer> killCounts = new EnumMap<CharacterType, Integer>(
+    private final Map<CharacterType, Integer> killCounts = new EnumMap<CharacterType, Integer>(
             CharacterType.class);
 
     /**
@@ -63,6 +63,19 @@ public final class KillObject {
             toReturn = 0;
         }
         return toReturn;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("KillObject: [killCounts=");
+        builder.append(killCounts);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
