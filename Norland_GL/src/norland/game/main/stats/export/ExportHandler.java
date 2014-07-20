@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import norland.game.main.stats.StatsBundle;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,6 +21,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
+import ca.casualt.norland.exportformat.StatsBundle;
 
 import com.google.gson.Gson;
 
@@ -73,7 +72,7 @@ public final class ExportHandler {
         }
         final String jsonBundle = convertForExport(statsBundle);
         Log.d("Export Handler", "JSON: " + jsonBundle);
-        AsyncTask<StatsBundle, Void, Boolean> uploadAsync = new AsyncTask<StatsBundle, Void, Boolean>() {
+        AsyncTask<ca.casualt.norland.exportformat.StatsBundle, Void, Boolean> uploadAsync = new AsyncTask<StatsBundle, Void, Boolean>() {
 
             @Override
             protected Boolean doInBackground(StatsBundle... params) {

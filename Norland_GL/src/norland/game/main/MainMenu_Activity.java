@@ -1,8 +1,6 @@
 package norland.game.main;
 
-import norland.game.main.stats.CharacterType;
 import norland.game.main.stats.ConcreteLogger;
-import norland.game.main.stats.LevelNumber;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -15,6 +13,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import ca.casualt.norland.exportformat.CharacterType;
+import ca.casualt.norland.exportformat.LevelNumber;
 
 public class MainMenu_Activity extends Activity implements Callback {
 

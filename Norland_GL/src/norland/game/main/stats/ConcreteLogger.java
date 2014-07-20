@@ -1,10 +1,18 @@
 package norland.game.main.stats;
 
+import java.util.Map;
 import java.util.Stack;
 
+import norland.game.main.UpgradeMain;
 import norland.game.main.stats.export.ExportHandler;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import ca.casualt.norland.exportformat.CharacterType;
+import ca.casualt.norland.exportformat.LevelAttempt;
+import ca.casualt.norland.exportformat.LevelInteraction;
+import ca.casualt.norland.exportformat.LevelNumber;
+import ca.casualt.norland.exportformat.StatsBundle;
 
 /**
  * An implementation of the LoggerInterface.
@@ -30,7 +38,9 @@ public class ConcreteLogger implements LoggerInterface {
     }
 
     public synchronized void startNewLevel(final LevelNumber levelNumberIn, final Context context) {
-        loggedInteractions.push(new LevelInteraction(context));
+        SharedPreferences sp = UpgradeMain.getStandardSharedPreferences(context);
+        Map<String, ?> userSettings = sp.getAll();
+        loggedInteractions.push(new LevelInteraction(userSettings));
     }
 
     public synchronized void newLevelAttempt() {

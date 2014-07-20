@@ -1,6 +1,8 @@
 package norland.game.main.stats;
 
 import android.content.Context;
+import ca.casualt.norland.exportformat.CharacterType;
+import ca.casualt.norland.exportformat.LevelNumber;
 
 /**
  * A Logger must implement this interface.
