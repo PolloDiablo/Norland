@@ -37,7 +37,7 @@ public class Tips {
 	
 	//TODO Remove from Level 8
 	public static String betaTitle = "Congratulations";
-	public static String beta = "Thank you for playing Norland Beta. Please send us feedback using the form in the main menu. " +
+	public static String beta = "Thank you for playing Norland! Beta. Please send us feedback using the form in the main menu. " +
 			"We are pretty awesome and will probably listen to your suggestions!\nLevel 9 is a special challenge mission. Enjoy :D";	
 	
 	//----------------------------------------------------------------------------------

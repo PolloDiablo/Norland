@@ -159,8 +159,6 @@ private void enterPauseMenu(){
 			}
 		});
 				
-		
-		
 		builder.setOnCancelListener(new OnCancelListener() {
 			public void onCancel(DialogInterface arg0) {
 				if(!stayPaused){

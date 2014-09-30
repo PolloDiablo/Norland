@@ -37,6 +37,8 @@ public class level08 extends LevelSuper{
         double rad = num.nextFloat()*2*Math.PI - Math.PI; 
         int x = (int)(z*Math.cos(rad));
         int y = (int)(z*Math.sin(rad));
+        
+        // TODO, this is only here to make levelsuper happy... bad
         objective = new Thing(GlRenderer.bitmapIsland1, x, y, 512, 512);
         objective.update();
         
@@ -48,6 +50,7 @@ public class level08 extends LevelSuper{
 		
 		GlRenderer.weaponsOn=true;
         GlRenderer.showCompass=true;
+        GlRenderer.showCompassDistance=false;     
         	
 		hasKilledBoss=false;
 

@@ -47,6 +47,7 @@ public class Level02 extends LevelSuper{
 		
 		GlRenderer.weaponsOn=true;
         GlRenderer.showCompass=false;
+        GlRenderer.showCompassDistance=false;
         
         tipCounter=0;
         hasShownAttacksTip = false;

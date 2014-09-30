@@ -156,6 +156,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
     // public static Bitmap bitmapCompass;
     public static Bitmap bitmapCompassPointer;
     public static boolean showCompass;
+    public static boolean showCompassDistance;
 
     // public static Visual compass;
     public static Thing compassPointer;
@@ -304,6 +305,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
         compassDistance = new VisualDynamic(300, 140);
         compassDistanceText = "0m";
         showCompass = true;
+        showCompassDistance = true;
 
         // Initialize water
         // this.water = new Visual(bitmapWater,WIDTH/2,HEIGHT/2,WIDTH,HEIGHT);
@@ -833,10 +835,13 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                     // - compassOffset + shipLocY - HEIGHT / 2);
                     if (showCompass) {
                         compassPointer.draw(gl);
-            			compassDistance.updateBitmap(gl, getContext(), compassDistanceText);
-                        compassDistance.draw(gl, (GlRenderer.shipLocX - GlRenderer.WIDTH_HALF + GlMainMenu.widthScale*160), 
-                				GlRenderer.shipLocY+GlRenderer.HEIGHT_HALF-GlMainMenu.heightScale*(15));  
+                        if( showCompassDistance ){
+                			compassDistance.updateBitmap(gl, getContext(), compassDistanceText);
+                            compassDistance.draw(gl, (GlRenderer.shipLocX - GlRenderer.WIDTH_HALF + GlMainMenu.widthScale*160), 
+                    				GlRenderer.shipLocY+GlRenderer.HEIGHT_HALF-GlMainMenu.heightScale*(15));             	
+                        }
                     }
+
 
                 // If not running the upgrade screen
             	} else if (runningUpgradeScreen) {

@@ -48,6 +48,7 @@ public class level09 extends LevelSuper{
 		
 		GlRenderer.weaponsOn=true;
 		GlRenderer.showCompass=false;
+		GlRenderer.showCompassDistance=false;
 		
 		objectiveNum = new VisualDynamic(300, 140);
 		objectiveKillCount=0;

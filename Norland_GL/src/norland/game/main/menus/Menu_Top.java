@@ -14,7 +14,7 @@ public class Menu_Top implements MenuState {
 
     // Switch ID: 1
     private Thing title;
-    private Thing beta;
+    private Thing beta; //TODO
     private Thing Campaign;
     private Thing Options;
     private Thing Extras;
@@ -26,7 +26,7 @@ public class Menu_Top implements MenuState {
 
         title = new Thing(GlMainMenu.bitmapTitle_top, GlMainMenu.WIDTH / 2,
                 GlMainMenu.heightScale * 100, 256, 64);
-        beta = new Thing(GlMainMenu.bitmapBeta, 149 + GlMainMenu.WIDTH / 2,
+        beta = new Thing(GlMainMenu.bitmapBeta, 160 + GlMainMenu.WIDTH / 2,
                 GlMainMenu.heightScale * 125, 128, 32);
         Campaign = new Thing(GlMainMenu.bitmapCampaign, GlMainMenu.WIDTH / 2,
                 GlMainMenu.heightScale * 250, 256, 64);
@@ -45,7 +45,7 @@ public class Menu_Top implements MenuState {
         title.setX(GlMainMenu.WIDTH / 2 + GlMainMenu.menuShiftX);
         title.setY(GlMainMenu.heightScale * 100 + GlMainMenu.menuShiftY);
 
-        beta.setX(GlMainMenu.widthScale * 149 + GlMainMenu.WIDTH / 2 + GlMainMenu.menuShiftX);
+        beta.setX(GlMainMenu.widthScale * 160 + GlMainMenu.WIDTH / 2 + GlMainMenu.menuShiftX);
         beta.setY(GlMainMenu.heightScale * 125 + GlMainMenu.menuShiftY);
 
         Campaign.setX(GlMainMenu.WIDTH / 2 + GlMainMenu.menuShiftX);

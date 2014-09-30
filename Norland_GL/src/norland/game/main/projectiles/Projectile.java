@@ -18,9 +18,7 @@ public abstract class Projectile extends Thing {
     	return this.range;
     }
    
-
     private boolean isFriendly;
-
     protected double distanceTravelled;
 	public boolean hasBeenInitiated;
  
@@ -32,7 +30,7 @@ public abstract class Projectile extends Thing {
         this.range = rng*GlMainMenu.widthScale;
         distanceTravelled = 0;
         setFriendly(friendly);
-        d++;
+        ++d;
         hasBeenInitiated=false;
         Log.v("Projectile","NEW Projectile Num: "+ d);   
     }
@@ -51,7 +49,6 @@ public abstract class Projectile extends Thing {
     	}
     	
     	if(projectileClassMap.get(prototype.getClass()).isEmpty()){
-    		//Log.d("Projectile","Prototype range: " + prototype.getRange());
     		//TODO Adjusting the range here is really bad
     		// But if we don't, then the range essentially gets scaled twice
     		// Should be able to workaround this issue by not having any scale factors at all,
@@ -64,7 +61,6 @@ public abstract class Projectile extends Thing {
     		projectileClassMap.get(prototype.getClass()).remove(0);
     		p.reset(prototype.getX(), prototype.getY(), prototype.getBaseMoveSpeed(),prototype.getAngle());
             p.setDamage(prototype.getDamage());
-            Log.d("Projectile","Prototype range: " + prototype.getRange());
             p.range = prototype.getRange();
             p.distanceTravelled = 0;
             p.setFriendly(prototype.isFriendly()); 
@@ -94,7 +90,6 @@ public abstract class Projectile extends Thing {
      */
 	public void repool() {
 		projectileClassMap.get(this.getClass()).add(this);
-		//Log.d("Repool Called","Pool Size= " + projectilePool.size() + "  Currently Used= " + GlRenderer.projectiles.size() + "," + GlRenderer.wakes.size());
 	}
 	
 	public static void clearAllPools(){
