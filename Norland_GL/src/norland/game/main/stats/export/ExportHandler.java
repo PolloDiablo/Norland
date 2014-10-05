@@ -35,7 +35,7 @@ public final class ExportHandler {
     /**
      * For sending uploads.
      */
-    private static final String URL = "http://norlandserver.appspot.com/";
+    private static final String URL = "http://norlandserver.appspot.com/norlandserver";
     // "http://192.168.1.18:8888/norlandserver";
 
     /**
