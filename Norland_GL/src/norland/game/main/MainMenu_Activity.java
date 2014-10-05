@@ -86,14 +86,20 @@ public class MainMenu_Activity extends Activity implements Callback {
     protected void onPause() {
         GlMainMenu.onPauseCalled = true;
 
-        GlMainMenu.mediaPlayer.release();
+        if (GlMainMenu.mediaPlayer != null) {
+            GlMainMenu.mediaPlayer.release();
+        }
 
         if (isShowingPauseDialog) {
-            pauseDialog.cancel();
+            if (pauseDialog != null) {
+                pauseDialog.cancel();
+            }
         }
 
         super.onPause();
-        MMglSurfaceView.onPause();
+        if (MMglSurfaceView != null) {
+            MMglSurfaceView.onPause();
+        }
         finish();
     }
 

@@ -35,7 +35,8 @@ public final class ExportHandler {
     /**
      * For sending uploads.
      */
-    private static final String URL = "http://192.168.0.18:8888/norlandserver";
+    private static final String URL = "http://norlandserver.appspot.com/";
+    // "http://192.168.1.18:8888/norlandserver";
 
     /**
      * If true, then always attempt upload no matter what connection the phone
