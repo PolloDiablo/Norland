@@ -29,16 +29,19 @@ public class NorlandServerServlet extends HttpServlet {
         if (inputData != null) {
             if (Operations.saveToDatabase(inputData)) {
                 // Success case
+                System.out.println("Saved to database.");
                 resp.getWriter().println("Saved to database.");
             } else {
                 // DB Error case
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 resp.getWriter().println("Problem saving data.");
+                System.err.println("Problem saving data.");
             }
         } else {
             // Error case.
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().println("Problem with input data.");
+            System.out.println("Problem with input data.");
         }
         System.out.println("InputData: " + inputData);
     }

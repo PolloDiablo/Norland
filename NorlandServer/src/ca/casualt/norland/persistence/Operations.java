@@ -46,6 +46,9 @@ public final class Operations {
             datastore.put(levelInteractions);
             tran.commit();
             return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         } finally {
             if (tran.isActive()) {
                 tran.rollback();

@@ -2,7 +2,11 @@ package ca.casualt.norland.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import ca.casualt.norland.exportformat.CharacterType;
+import ca.casualt.norland.exportformat.KillObject;
 import ca.casualt.norland.exportformat.LevelAttempt;
 import ca.casualt.norland.exportformat.LevelInteraction;
 
@@ -91,7 +95,8 @@ public final class Conversion {
                 toAdd.setProperty(KEY_LEVELINTERACTION_ATTEMPTS, lAttemptsToSave);
                 toAdd.setProperty(KEY_LEVELINTERACTION_TIMEEND, li.getTimeEnd());
                 toAdd.setProperty(KEY_LEVELINTERACTION_TIMESTART, li.getTimeStart());
-                toAdd.setProperty(KEY_LEVELINTERACTION_USERSETTINGS, li.getUserSettings());
+                toAdd.setProperty(KEY_LEVELINTERACTION_USERSETTINGS,
+                        toEmbeddedEntity(li.getUserSettings()));
                 toReturn.add(toAdd);
             }
         }
@@ -120,9 +125,34 @@ public final class Conversion {
      */
     private static EmbeddedEntity toEmbeddedEntity(final LevelAttempt toConvert) {
         EmbeddedEntity embed = new EmbeddedEntity();
-        embed.setProperty(KEY_LEVELATTEMPT_KILLS, toConvert.getKills());
+        KillObject kills = toConvert.getKills();
+        embed.setProperty(KEY_LEVELATTEMPT_KILLS, toEmbeddedEntity(kills));
         embed.setProperty(KEY_LEVELATTEMPT_TIMEEND, toConvert.getTimeEnd());
         embed.setProperty(KEY_LEVELATTEMPT_TIMESTTART, toConvert.getTimeStart());
+        return embed;
+    }
+
+    /**
+     * @param toConvert
+     * @return
+     */
+    private static EmbeddedEntity toEmbeddedEntity(final KillObject toConvert) {
+        EmbeddedEntity embed = new EmbeddedEntity();
+        for (Entry<CharacterType, Integer> ent : toConvert.getKillCounts().entrySet()) {
+            embed.setProperty(ent.getKey().name(), ent.getValue());
+        }
+        return embed;
+    }
+
+    /**
+     * @param toConvert
+     * @return
+     */
+    private static EmbeddedEntity toEmbeddedEntity(final Map<String, ?> toConvert) {
+        EmbeddedEntity embed = new EmbeddedEntity();
+        for (Entry<String, ?> ent : toConvert.entrySet()) {
+            embed.setProperty(ent.getKey(), ent.getValue());
+        }
         return embed;
     }
 }
