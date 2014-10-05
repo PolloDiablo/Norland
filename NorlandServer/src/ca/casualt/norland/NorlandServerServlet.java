@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ca.casualt.norland.exportformat.StatsBundle;
+import ca.casualt.norland.persistence.Operations;
 import ca.casualt.norland.shared.RequestAccess;
 
 @SuppressWarnings("serial")
@@ -23,13 +24,22 @@ public class NorlandServerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String json = RequestAccess.getData(req);
-        System.out.println(json);
-
-        StatsBundle testData = RequestAccess.getData(req, StatsBundle.class);
-        System.out.println(testData);
+        System.out.println("InputJSON: " + json);
+        StatsBundle inputData = RequestAccess.getData(req, StatsBundle.class);
+        if (inputData != null) {
+            if (Operations.saveToDatabase(inputData)) {
+                // Success case
+                resp.getWriter().println("Saved to database.");
+            } else {
+                // DB Error case
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.getWriter().println("Problem saving data.");
+            }
+        } else {
+            // Error case.
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().println("Problem with input data.");
+        }
+        System.out.println("InputData: " + inputData);
     }
-
-    // private static class TestDataClass {
-    // }
-
 }
