@@ -36,7 +36,7 @@ import norland.game.main.levels.level24;
 import norland.game.main.levels.level25;
 import norland.game.main.levels.level26;
 import norland.game.main.levels.level27;
-import norland.game.main.menus.MenuState;
+import norland.game.main.menus.UpgradeSuper;
 import norland.game.main.menus.Upgrade_Arrows;
 import norland.game.main.menus.Upgrade_Cannons;
 import norland.game.main.menus.Upgrade_Defense;
@@ -216,11 +216,11 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
     public static boolean endUpgradeScreen;
 
     /** Main object for the current menu being displayed */
-    private MenuState myUpgradeState;
+    private UpgradeSuper myUpgradeState;
     /** Stores which sub-menu is currently being displayed */
     public static int USER_UPGRADE_SELECT;
 
-    public static Thing clickSelection;
+    private static Thing clickSelection;
     public static Bitmap bitmapDamage;
     public static Bitmap bitmapFireRate;
     public static Bitmap bitmapFireResist;
@@ -711,7 +711,10 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
                         this.changeUpgradeState(gl);
                     }
                     clickSelection.update();
-                    myUpgradeState.update(getContext());
+                    myUpgradeState.update(clickSelection, getContext());
+                    // Move clicker back to the middle of nowhere
+            		clickSelection.setX(10000);
+            		clickSelection.setY(10000);
                 }
 
                 //TODO make this a function call, not a boolean

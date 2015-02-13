@@ -1,128 +1,74 @@
 package norland.game.main.menus;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import norland.game.main.GlMainMenu;
 import norland.game.main.MainMenu_Activity;
 import norland.game.main.Thing;
+import norland.game.main.menus.MenuItem.ButtonType;
 import android.content.Context;
 
-
-public class Menu_a3s2 implements MenuState {
+public class Menu_a3s2 extends MenuSuper {
 
 	//Switch ID: 11
-	private Thing title;
-	private Thing level21;
-	private Thing level22;
-	private Thing level23;
-	private Thing cancel;
-	private Thing previous;
-	private Thing next;
+	private MenuItem level21;
+	private MenuItem level22;
+	private MenuItem level23;
+	private MenuItem cancel;
+	private MenuItem previous;
+	private MenuItem next;
 	
-	public void addStuff() {
+	public void addStuff(Context context) {
 		//Log.d(GlMainMenu.TAGMM,"Menu: Menu_a3s2");
-		
-		title = new Thing(GlMainMenu.bitmapa3s2, GlMainMenu.WIDTH/2, GlMainMenu.heightScale*100, 512, 64);
-		level21 = new Thing(GlMainMenu.bitmapLevel21, GlMainMenu.WIDTH/2, GlMainMenu.heightScale*250, 256, 64);
-		level22 = new Thing(GlMainMenu.bitmapLevel22, GlMainMenu.WIDTH/2, GlMainMenu.heightScale*350, 256, 64);
-		level23 = new Thing(GlMainMenu.bitmapLevel23, GlMainMenu.WIDTH/2, GlMainMenu.heightScale*450, 256, 64);
-		previous = new Thing(GlMainMenu.bitmapPrevious, 0.25*GlMainMenu.WIDTH, GlMainMenu.HEIGHT-GlMainMenu.heightScale*200, 128, 64);
-		next = new Thing(GlMainMenu.bitmapNext, 0.75*GlMainMenu.WIDTH, GlMainMenu.HEIGHT-GlMainMenu.heightScale*200, 128, 64);
-		cancel = new Thing(GlMainMenu.bitmapCancel, GlMainMenu.WIDTH/2, GlMainMenu.HEIGHT-GlMainMenu.heightScale*100, 256, 64);
-		
+		buttons.add(new MenuItem(GlMainMenu.bitmapa3s2, ButtonType.TITLEWIDE));
+		level21 = new MenuItem(GlMainMenu.bitmapLevel21, ButtonType.B1);
+		buttons.add(level21);
+		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 22){
+			level22 = new MenuItem(GlMainMenu.bitmapLevel22, ButtonType.B2);
+			buttons.add(level22);
+		}
+		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 23){
+			level23 = new MenuItem(GlMainMenu.bitmapLevel23, ButtonType.B3);
+			buttons.add(level23);
+		}
+		previous = new MenuItem(GlMainMenu.bitmapPrevious, ButtonType.PREV);
+		buttons.add(previous);
+		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 24){
+			next = new MenuItem(GlMainMenu.bitmapNext, ButtonType.NEXT);
+			buttons.add(next);
+		}
+		cancel = new MenuItem(GlMainMenu.bitmapCancel, ButtonType.BOTTOM);
+		buttons.add(cancel);
 	}
 
-	public void update(Context context) {
-		title.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		title.setY(GlMainMenu.heightScale*100+GlMainMenu.menuShiftY);
+	public void update(Thing clickSelection, Context context) {
+		super.updateButtonPositions();
 		
-		level21.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		level21.setY(GlMainMenu.heightScale*250+GlMainMenu.menuShiftY);
-
-		level22.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		level22.setY(GlMainMenu.heightScale*350+GlMainMenu.menuShiftY);
-		
-		level23.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		level23.setY(GlMainMenu.heightScale*450+GlMainMenu.menuShiftY);
-		
-		previous.setX(0.25*GlMainMenu.WIDTH+GlMainMenu.menuShiftX);
-		previous.setY(GlMainMenu.HEIGHT-GlMainMenu.heightScale*200+GlMainMenu.menuShiftY);
-		
-		next.setX(0.75*GlMainMenu.WIDTH+GlMainMenu.menuShiftX);
-		next.setY(GlMainMenu.HEIGHT-GlMainMenu.heightScale*200+GlMainMenu.menuShiftY);
-		
-		
-		cancel.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		cancel.setY(GlMainMenu.HEIGHT-GlMainMenu.heightScale*100+GlMainMenu.menuShiftY);
-		
-		title.update();
-		level21.update();
-		level22.update();
-		level23.update();
-		previous.update();
-		next.update();
-		cancel.update();
-		
-		
-		
-
-		if(level21.hasCollided((GlMainMenu.clickSelection),true)){
+		if(level21.getThing().hasCollided(clickSelection,true)){
 			GlMainMenu.enterGame(21,context);
 		}
 		
 		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 22){
-			if(level22.hasCollided((GlMainMenu.clickSelection),true)){
+			if(level22.getThing().hasCollided(clickSelection,true)){
 				GlMainMenu.enterGame(22,context);
 			}
 		}
 		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 23){
-			if(level23.hasCollided((GlMainMenu.clickSelection),true)){
+			if(level23.getThing().hasCollided(clickSelection,true)){
 				GlMainMenu.enterGame(23,context);
 			}
 		}
 
-		if(previous.hasCollided((GlMainMenu.clickSelection),true)){
+		if(previous.getThing().hasCollided(clickSelection,true)){
 			GlMainMenu.USER_MENU_SELECT = 10;	
 		}	
 		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 24){
-			if(next.hasCollided((GlMainMenu.clickSelection),true)){
+			if(next.getThing().hasCollided(clickSelection,true)){
 				GlMainMenu.USER_MENU_SELECT = 12;	
 			}	
 		}	
 
-		if(cancel.hasCollided((GlMainMenu.clickSelection),true)){
+		if(cancel.getThing().hasCollided(clickSelection,true)){
 			GlMainMenu.USER_MENU_SELECT = 2;	
 		}	
-		
-		GlMainMenu.clickSelection.setX(10000);
-		GlMainMenu.clickSelection.setY(10000);
-		
-	}
-
-	public void onDrawFrame(GL10 gl,Context context) {
-		title.draw(gl);
-		level21.draw(gl);
-		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 22){
-			level22.draw(gl);
-		}
-		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 23){
-			level23.draw(gl);
-		}
-		previous.draw(gl);
-		if(context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_levelUnlock, 1) >= 24){
-			next.draw(gl);
-		}
-		cancel.draw(gl);
-	}
-
-	public void initiateShapes(GL10 gl, Context context) {
-		title.initShape(gl, context);
-		level21.initShape(gl, context);
-		level22.initShape(gl, context);
-		level23.initShape(gl, context);
-		previous.initShape(gl, context);
-		next.initShape(gl, context);
-		cancel.initShape(gl, context);	
 	}
 
 }

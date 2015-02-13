@@ -1,63 +1,35 @@
 package norland.game.main.menus;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import norland.game.main.GlMainMenu;
 import norland.game.main.Thing;
+import norland.game.main.menus.MenuItem.ButtonType;
 import android.content.Context;
 
 
-public class Menu_Return implements MenuState {
+public class Menu_Return extends MenuSuper {
 
 	//Switch ID: 15
-	private Thing title;
-	private Thing retry;
-	private Thing returnToMenu;
+	private MenuItem retry;
+	private MenuItem returnToMenu;
 	
-	public void addStuff() {
+	public void addStuff(Context context) {
 		//Log.d(GlMainMenu.TAGMM,"Menu: Menu_Return");
-		
-		title = new Thing(GlMainMenu.bitmapTitle_death, GlMainMenu.WIDTH/2, GlMainMenu.heightScale*125, 512, 128);
-		retry = new Thing(GlMainMenu.bitmapRetry, GlMainMenu.WIDTH/2, GlMainMenu.heightScale*350, 256, 64);
-		returnToMenu = new Thing(GlMainMenu.bitmapExit, GlMainMenu.WIDTH/2, GlMainMenu.heightScale*450, 256, 64);
+		buttons.add(new MenuItem(GlMainMenu.bitmapTitle_death, ButtonType.TITLEHUGE));
+		retry = new MenuItem(GlMainMenu.bitmapRetry, ButtonType.B1);
+		buttons.add(retry);
+		returnToMenu = new MenuItem(GlMainMenu.bitmapExit, ButtonType.BOTTOM);
+		buttons.add(returnToMenu);
 	}
 
-	public void update(Context context) {
-		title.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		title.setY(GlMainMenu.heightScale*125+GlMainMenu.menuShiftY);
+	public void update(Thing clickSelection, Context context) {
+		super.updateButtonPositions();
 		
-		retry.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		retry.setY(GlMainMenu.heightScale*350+GlMainMenu.menuShiftY);
-		
-		returnToMenu.setX(GlMainMenu.WIDTH/2+GlMainMenu.menuShiftX);
-		returnToMenu.setY(GlMainMenu.heightScale*450+GlMainMenu.menuShiftY);
-		
-		retry.update();
-		returnToMenu.update();
-		
-		if(retry.hasCollided((GlMainMenu.clickSelection),true)){
+		if(retry.getThing().hasCollided(clickSelection,true)){
 			GlMainMenu.enterGame(GlMainMenu.levelThatTheUserDiedOn,context);
 		}
 		
-		if(returnToMenu.hasCollided((GlMainMenu.clickSelection),true)){
+		if(returnToMenu.getThing().hasCollided(clickSelection,true)){
 			GlMainMenu.USER_MENU_SELECT=1;
 		}
-		
-		GlMainMenu.clickSelection.setX(10000);
-		GlMainMenu.clickSelection.setY(10000);
-		
 	}
-
-	public void onDrawFrame(GL10 gl, Context context) {
-		title.draw(gl);
-		retry.draw(gl);
-		returnToMenu.draw(gl);
-	}
-
-	public void initiateShapes(GL10 gl, Context context) {
-		title.initShape(gl, context);
-		retry.initShape(gl, context);
-		returnToMenu.initShape(gl, context);	
-	}
-
 }

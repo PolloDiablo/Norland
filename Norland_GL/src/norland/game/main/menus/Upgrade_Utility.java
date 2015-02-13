@@ -5,77 +5,83 @@ import javax.microedition.khronos.opengles.GL10;
 import norland.game.main.GlMainMenu;
 import norland.game.main.GlRenderer;
 import norland.game.main.MainMenu_Activity;
-import norland.game.main.R;
 import norland.game.main.Thing;
 import norland.game.main.Tips;
 import norland.game.main.UpgradeMain;
 import norland.game.main.VisualDynamic;
+import norland.game.main.menus.UpgradeMenuItem.UpgradeMenuItemType;
 import android.content.Context;
 
-public class Upgrade_Utility implements MenuState {
+public class Upgrade_Utility extends UpgradeSuper{
 
 	//Switch ID: 6
-	private Thing title;
-	private Thing points;
+	private UpgradeMenuItem title;
+	private UpgradeMenuItem points;
 	private VisualDynamic pointNum;
 	
-	private Thing speed;
+	private UpgradeMenuItem speed;
 	private VisualDynamic speedNum;
-	private Thing SPlus;
-	private Thing SMinus;
+	private UpgradeMenuItem SPlus;
+	private UpgradeMenuItem SMinus;
 	
-	private Thing turningRadius;
+	private UpgradeMenuItem turningRadius;
 	private VisualDynamic turningRadiusNum;
-	private Thing TRPlus;
-	private Thing TRMinus;
+	private UpgradeMenuItem TRPlus;
+	private UpgradeMenuItem TRMinus;
 
-	private Thing uber;
+	private UpgradeMenuItem uber;
 	private VisualDynamic uberNum;
-	private Thing UPlus;
-	private Thing UMinus;
+	private UpgradeMenuItem UPlus;
+	private UpgradeMenuItem UMinus;
 	
-	private Thing back;
+	private UpgradeMenuItem back;
 	
 	public void addStuff() {
 		//Log.d(GlRenderer.TAG,"Upgrade: Upgrade_Utility");
-		title = new Thing(GlRenderer.bitmapTUtility, GlRenderer.WIDTH_HALF, GlMainMenu.heightScale*75, 256, 64);
-		points = new Thing(GlRenderer.bitmapPoints, GlRenderer.WIDTH_HALF-GlMainMenu.widthScale*25, GlMainMenu.heightScale*150, 512, 64);
-		pointNum = new VisualDynamic(100,100);
+		title = new UpgradeMenuItem(GlRenderer.bitmapTUtility, UpgradeMenuItemType.TITLE, 0);
+		menuItems.add(title);
+		points = new UpgradeMenuItem(GlRenderer.bitmapPoints, UpgradeMenuItemType.POINTS, 1);
+		menuItems.add(points);
+		pointNum = new VisualDynamic(upgradeVisualDynamicSize,upgradeVisualDynamicSize);
+		visuals.add(pointNum);
 		
-		speed = new Thing(GlRenderer.bitmapSpeed, GlMainMenu.widthScale*77, GlMainMenu.heightScale*250, 256, 64);
-		speedNum = new VisualDynamic(100, 100);
-		SPlus = new Thing(GlRenderer.bitmapPlus, GlRenderer.WIDTH-GlMainMenu.widthScale*45, GlMainMenu.heightScale*250, 64, 64);
-		SMinus = new Thing(GlRenderer.bitmapMinus, GlRenderer.WIDTH-GlMainMenu.widthScale*115, GlMainMenu.heightScale*250, 64, 64);
+		speed = new UpgradeMenuItem(GlRenderer.bitmapSpeed, UpgradeMenuItemType.TEXT, 2);
+		menuItems.add(speed);
+		speedNum = new VisualDynamic(upgradeVisualDynamicSize,upgradeVisualDynamicSize);
+		visuals.add(speedNum);
+		SPlus = new UpgradeMenuItem(GlRenderer.bitmapPlus, UpgradeMenuItemType.PLUS, 2);
+		menuItems.add(SPlus);
+		SMinus = new UpgradeMenuItem(GlRenderer.bitmapMinus, UpgradeMenuItemType.MINUS, 2);
+		menuItems.add(SMinus);
 		
-		turningRadius = new Thing(GlRenderer.bitmapTurning, GlMainMenu.widthScale*94, GlMainMenu.heightScale*350, 256, 64);
-		turningRadiusNum = new VisualDynamic(100, 100);
-		TRPlus = new Thing(GlRenderer.bitmapPlus, GlRenderer.WIDTH-GlMainMenu.widthScale*45, GlMainMenu.heightScale*350, 64, 64);
-		TRMinus = new Thing(GlRenderer.bitmapMinus, GlRenderer.WIDTH-GlMainMenu.widthScale*115, GlMainMenu.heightScale*350, 64, 64);
+		turningRadius = new UpgradeMenuItem(GlRenderer.bitmapTurning, UpgradeMenuItemType.TEXT, 3);
+		menuItems.add(turningRadius);
+		turningRadiusNum = new VisualDynamic(upgradeVisualDynamicSize,upgradeVisualDynamicSize);
+		visuals.add(turningRadiusNum);
+		TRPlus = new UpgradeMenuItem(GlRenderer.bitmapPlus, UpgradeMenuItemType.PLUS, 3);
+		menuItems.add(TRPlus);
+		TRMinus = new UpgradeMenuItem(GlRenderer.bitmapMinus, UpgradeMenuItemType.MINUS, 3);
+		menuItems.add(TRMinus);
 		
-		uber = new Thing(GlRenderer.bitmapUber,GlMainMenu.widthScale*63, GlMainMenu.heightScale*450, 256, 64);
-		uberNum = new VisualDynamic(100, 100);
-		UPlus = new Thing(GlRenderer.bitmapPlus, GlRenderer.WIDTH-GlMainMenu.widthScale*45, GlMainMenu.heightScale*450, 64, 64);
-		UMinus = new Thing(GlRenderer.bitmapMinus, GlRenderer.WIDTH-GlMainMenu.widthScale*115, GlMainMenu.heightScale*450, 64, 64);
-		back = new Thing(GlRenderer.bitmapBack, GlRenderer.WIDTH_HALF, GlRenderer.HEIGHT-GlMainMenu.heightScale*100, 256, 64);
+		uber = new UpgradeMenuItem(GlRenderer.bitmapUber, UpgradeMenuItemType.TEXT, 4);
+		menuItems.add(uber);
+		uberNum = new VisualDynamic(upgradeVisualDynamicSize,upgradeVisualDynamicSize);
+		visuals.add(uberNum);
+		UPlus = new UpgradeMenuItem(GlRenderer.bitmapPlus, UpgradeMenuItemType.PLUS, 4);
+		menuItems.add(UPlus);
+		UMinus = new UpgradeMenuItem(GlRenderer.bitmapMinus, UpgradeMenuItemType.MINUS, 4);
+		menuItems.add(UMinus);
+		
+		back = new UpgradeMenuItem(GlRenderer.bitmapBack, UpgradeMenuItemType.BOTTOM, -1);
+		menuItems.add(back);
 	}
 
 	private int newAmount;
 	private int upgradesTotal;
 	private int upgradesSpent;
 	private boolean canUber;
-	public void update(Context context) {
-
-		back.update();
-		SPlus.update();
-		SMinus.update();
-		TRPlus.update();
-		TRMinus.update();
-		UPlus.update();
-		UMinus.update();
-		
-		speed.update();
-		turningRadius.update();
-		uber.update();
+	public void update(Thing clickSelection, Context context) {
+		super.updateMenuItemPositions();
 		
 		SPoints=context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_shipSpeed, 1);
 		TRPoints=context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getInt(GlMainMenu.LOCAL_shipTurningRadius, 1);
@@ -89,11 +95,11 @@ public class Upgrade_Utility implements MenuState {
 		}
 		
 
-		if(SPlus.hasCollided(GlRenderer.clickSelection,true) && SPoints<3 && upgradesTotal-upgradesSpent>0){
+		if(SPlus.getThing().hasCollided(clickSelection,true) && SPoints<3 && upgradesTotal-upgradesSpent>0){
 			newAmount=SPoints+1;
 			context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putInt(GlMainMenu.LOCAL_shipSpeed, newAmount).commit();
 			upgradesSpent++;
-		}else if(SMinus.hasCollided(GlRenderer.clickSelection,true) && SPoints>1){
+		}else if(SMinus.getThing().hasCollided(clickSelection,true) && SPoints>1){
 			newAmount=SPoints-1;
 			context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putInt(GlMainMenu.LOCAL_shipSpeed, newAmount).commit();
 			upgradesSpent--;
@@ -104,11 +110,11 @@ public class Upgrade_Utility implements MenuState {
 			}
 		}
 		
-		if(TRPlus.hasCollided(GlRenderer.clickSelection,true) && TRPoints<4 && upgradesTotal-upgradesSpent>0){
+		if(TRPlus.getThing().hasCollided(clickSelection,true) && TRPoints<4 && upgradesTotal-upgradesSpent>0){
 			newAmount=TRPoints+1;
 			context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putInt(GlMainMenu.LOCAL_shipTurningRadius, newAmount).commit();
 			upgradesSpent++;
-		}else if(TRMinus.hasCollided(GlRenderer.clickSelection,true) && TRPoints>1){
+		}else if(TRMinus.getThing().hasCollided(clickSelection,true) && TRPoints>1){
 			newAmount=TRPoints-1;
 			context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putInt(GlMainMenu.LOCAL_shipTurningRadius, newAmount).commit();
 			upgradesSpent--;
@@ -120,11 +126,11 @@ public class Upgrade_Utility implements MenuState {
 		}
 		
 		if(SPoints==3 && TRPoints==4){
-			if(UPlus.hasCollided(GlRenderer.clickSelection,true) && upgradesTotal-upgradesSpent>0 
+			if(UPlus.getThing().hasCollided(clickSelection,true) && upgradesTotal-upgradesSpent>0 
 					&& !context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getBoolean(GlMainMenu.LOCAL_shipUberUtility, false)){
 				context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putBoolean(GlMainMenu.LOCAL_shipUberUtility, true).commit();
 				upgradesSpent++;
-			}else if(UMinus.hasCollided(GlRenderer.clickSelection,true) && context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getBoolean(GlMainMenu.LOCAL_shipUberUtility, false)){
+			}else if(UMinus.getThing().hasCollided(clickSelection,true) && context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).getBoolean(GlMainMenu.LOCAL_shipUberUtility, false)){
 				context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putBoolean(GlMainMenu.LOCAL_shipUberUtility, false).commit();
 				upgradesSpent--;
 			}
@@ -132,22 +138,20 @@ public class Upgrade_Utility implements MenuState {
 			context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putBoolean(GlMainMenu.LOCAL_shipUberUtility, false).commit();
 		}
 		
-		if(speed.hasCollided(GlRenderer.clickSelection, true)){
+		if(speed.getThing().hasCollided(clickSelection, true)){
 			GlRenderer.showTip(Tips.shipSpeedTitle, Tips.shipSpeed);
 		}
-		if(turningRadius.hasCollided(GlRenderer.clickSelection, true)){
+		if(turningRadius.getThing().hasCollided(clickSelection, true)){
 			GlRenderer.showTip(Tips.shipTRTitle, Tips.shipTR);
 		}
-		if(uber.hasCollided(GlRenderer.clickSelection, true)){
+		if(uber.getThing().hasCollided(clickSelection, true)){
 			GlRenderer.showTip(Tips.utilityUberTitle, Tips.utilityUber);
 		}			
 		
-		if(back.hasCollided((GlRenderer.clickSelection),true)){
+		if(back.getThing().hasCollided((clickSelection),true)){
 			GlRenderer.USER_UPGRADE_SELECT=1;
 		}
-		GlRenderer.clickSelection.setX(10000);
-		GlRenderer.clickSelection.setY(10000);	
-		
+
 		context.getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE).edit().putInt(GlMainMenu.LOCAL_upgradesSpent, upgradesSpent).commit();
 	}
 	
@@ -201,29 +205,6 @@ public class Upgrade_Utility implements MenuState {
 		
 		back.draw(gl);
 		
-	}
-
-	public void initiateShapes(GL10 gl, Context context) {
-		title.initShape(gl, context);
-		points.initShape(gl, context);
-		pointNum.initShape(gl, context);
-		pointNum.createBitmap(gl, context, R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
-		speed.initShape(gl, context);
-		speedNum.initShape(gl, context);
-		speedNum.createBitmap(gl, context, R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
-		SPlus.initShape(gl, context);
-		SMinus.initShape(gl, context);
-		turningRadius.initShape(gl, context);
-		turningRadiusNum.initShape(gl, context);
-		turningRadiusNum.createBitmap(gl, context, R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
-		TRPlus.initShape(gl, context);
-		TRMinus.initShape(gl, context);
-		uber.initShape(gl, context);
-		uberNum.initShape(gl, context);
-		uberNum.createBitmap(gl, context, R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
-		UPlus.initShape(gl, context);
-		UMinus.initShape(gl, context);
-		back.initShape(gl, context);
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.Random;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import norland.game.main.menus.MenuState;
+import norland.game.main.menus.MenuSuper;
 import norland.game.main.menus.Menu_EasterEggs;
 import norland.game.main.menus.Menu_Extras;
 import norland.game.main.menus.Menu_Options;
@@ -146,7 +146,7 @@ import android.view.MotionEvent;
     public static Bitmap bitmapa3s3;
 
     // Placed on the screen when you click, test collision with menu items
-    public static Thing clickSelection;
+    private static Thing clickSelection;
 
 
 
@@ -196,7 +196,7 @@ import android.view.MotionEvent;
     public static final String LOCAL_upgradesSpent = "LOCAL_upgradesSpent";
 
     /**The current menu (which buttons are visible), set in the switch*/
-    public static MenuState myMenuState;  
+    public static MenuSuper myMenuState;  
     /**Stores which GlMainMenu.myMenuState to switch to.*/
     public static int USER_MENU_SELECT;
     
@@ -293,7 +293,7 @@ import android.view.MotionEvent;
                 break;
         }
         // Initialize the new menu screen
-        myMenuState.addStuff();
+        myMenuState.addStuff(getContext());
         myMenuState.initiateShapes(gl, getContext());
         // Reset the switch
         USER_MENU_SELECT = 0;
@@ -307,8 +307,8 @@ import android.view.MotionEvent;
                 .getInt(LOCAL_levelUnlock, 1);
         
         // TODO Temporary for testing: unlock all the levels
-       // getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE,
-       // 		Context.MODE_PRIVATE).edit().putInt(LOCAL_levelUnlock, 27).commit();
+        /*getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE,
+ 		Context.MODE_PRIVATE).edit().putInt(LOCAL_levelUnlock, 27).commit();*/
 
         //Default: Game not completed, used to unlock easter eggs
         getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE)
@@ -320,11 +320,11 @@ import android.view.MotionEvent;
                 .getBoolean(LOCAL_evilIcebergsMode, false);
         
         // TODO Temporary for testing: easter eggs, upgrades
-       // getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE)
-        //        .edit().putBoolean(LOCAL_hasCompleted, true).commit();
-        //getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE,
-        //       Context.MODE_PRIVATE).edit().putInt(LOCAL_upgradesTotal,
-        //        37).commit();
+        /*getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE)
+                .edit().putBoolean(LOCAL_hasCompleted, true).commit();
+        getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE,
+               Context.MODE_PRIVATE).edit().putInt(LOCAL_upgradesTotal,
+                37).commit();*/
  
         //Default: Sound on
         getContext().getSharedPreferences(MainMenu_Activity.SHAREDPREFFILE, Context.MODE_PRIVATE)
@@ -483,7 +483,7 @@ import android.view.MotionEvent;
         } else {
             myMenuState = new Menu_Top();
         }
-        myMenuState.addStuff();
+        myMenuState.addStuff(getContext());
 
         // Create the click selector
         clickSelection = new Thing(bitmapSelector, 10000, 10000, 20, 20);
@@ -596,7 +596,11 @@ import android.view.MotionEvent;
         clickSelection.update();
         
         // Do all the specific updating for each menu screen
-        myMenuState.update(getContext());
+        myMenuState.update(clickSelection,getContext());
+        
+        // Reset the clicker to somewhere in the middle of nowhere TODO this is probably bad
+		clickSelection.setX(10000);
+		clickSelection.setY(10000);
 
         // OpenGL magic
         gl.glClearColorx(50, 50, 50, 1);
