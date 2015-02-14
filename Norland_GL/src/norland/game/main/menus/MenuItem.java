@@ -154,9 +154,7 @@ public class MenuItem{
 	}
 
 	public void update() {
-		// Move the MenuButton based on camera shift
-		thing.setX(originalX+GlMainMenu.menuShiftX);
-		thing.setY(originalY+GlMainMenu.menuShiftY);
+		// TODO should just need to call update once, at first, not every cycle!
 		// Plus do the regular ol' update
 		thing.update();
 	}

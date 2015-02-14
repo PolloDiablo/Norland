@@ -130,6 +130,7 @@ public class UpgradeMenuItem {
 	}
 	
 	public void update() {
+		//TODO  Is this necessary to do every cycle?
 		thing.update();
 	}
 	

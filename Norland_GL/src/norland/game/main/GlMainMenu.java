@@ -42,13 +42,8 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
     public static double heightScale;
     public static double widthScale;
     public static float magicalScreenSizeNumber;
-    // Used to translate camera
-    private float menuGLScreenLocX;
-    private float menuGLScreenLocY;
-    public static double menuShiftX;
-    public static double menuShiftY;
 
-    // Used for camera movement
+    // Used for mapBackground movement
     private static double backgroundMinX;
     private static double backgroundMaxX;
     private static double backgroundMinY;
@@ -58,16 +53,17 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
     private static double previousTargetX;
     private static double previousTargetY;
     int wait;
+    double mapBackgroundMovementAngle;
+    double mapBackgroundMoveSpeed;
+    double mapBackgroundMoveSpeedToPrevious;
+    private static Random rx = new Random();
+    private static Random ry = new Random();
 
     // For debugging
     public static final String TAGMM = GlMainMenu.class.getSimpleName();
 
     // The background picture (Norland Map)
-    private Thing mapPicture;
-
-    // Used for moving the GL camera (take the coords of this and transform
-    // them)
-    private Thing ourCamera;
+    private Thing backgroundMap;
 
     // All the bitmaps for menu items
 
@@ -479,25 +475,43 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
 
         // Initialize background image.
         // Want to scale at least 2x in both dimensions.
-        final double phoneScreenAdjust = Math.max(WIDTH * 2.0 / bitmapBackground.getWidth(), HEIGHT
-                * 2.0 / bitmapBackground.getHeight());
-        final double mapWidth = bitmapBackground.getWidth() * (phoneScreenAdjust) / widthScale;
-        final double mapHeight = bitmapBackground.getHeight() * (phoneScreenAdjust) / heightScale;
-        this.mapPicture = new Thing(bitmapBackground, WIDTH / 2, HEIGHT / 2, mapWidth, mapHeight);
-        ourCamera = new Thing(null, WIDTH / 2, HEIGHT / 2, 20, 20);
-
-        // Camera movement limits
-        backgroundMinX = -(mapWidth - (WIDTH));
-        backgroundMaxX = mapWidth;
-        backgroundMinY = -(mapHeight - (HEIGHT) - 300);
-        backgroundMaxY = mapHeight - 300;
-
-        // For camera movement stuff
+        final double mapWidth = 2*bitmapBackground.getWidth();
+        final double mapHeight = 2*bitmapBackground.getHeight();
+        this.backgroundMap = new Thing(bitmapBackground, WIDTH / 2, HEIGHT / 2, mapWidth, mapHeight);
+   
+        /* Logic for min/max boundaries of backgroundMap movement is as follows...
+         * 
+         * Centered map is at ( WIDTH/2 , HEIGHT/2 )
+         * 
+         * Lets look at the backgroundMinX as an example:
+         *		If we shifted the map by mapWidth/2, then we would see the edge through the middle of the screen
+         *		So we need to shift by mapWidth/2 - WIDTH/2:
+         *			=> (WIDTH/2-(mapWidth/2 - WIDTH/2))
+		 *			=> WIDTH - mapWidth/2
+         * 
+         * The Y coordinate has an extra twist, the actual picture isn't square..
+         * It has ~132 pixels of empty space on the top and bottom.
+         * 
+         * Additionally we use widthScale and heightScale to adjust for screen size
+         */
+        backgroundMinX = WIDTH - widthScale*mapWidth/2;
+        backgroundMaxX = (widthScale*mapWidth/2); 
+        
+        int blankPixelStripHeight = 132;
+        double pixelToCoordinateConversion = mapHeight/bitmapBackground.getHeight();
+        double heightOffset = blankPixelStripHeight*pixelToCoordinateConversion;
+        
+        backgroundMinY = (HEIGHT + heightScale*heightOffset - heightScale*mapHeight/2);
+        backgroundMaxY = (heightScale*mapHeight/2 - heightScale*heightOffset);
+        
+        // For backgroundMap movement stuff
         backgroundTargetX = 0;
         backgroundTargetY = 0;
         previousTargetX = 0;
         previousTargetY = 0;
         wait = 0;
+        mapBackgroundMovementAngle = 0;
+        
 
         // The game starts in the top menu unless returning to menu after dying
         if (launchDeathScreen) {
@@ -514,70 +528,66 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
         // For the switch, change menu is only called if this is !=0
         USER_MENU_SELECT = 0;
     }
-
-    /** Makes the menu screen look all fancy, smooth camera movement */
-    double cameraMoveSpeed;
-    double cameraMoveSpeedToPrevious;
-
-    public void updateCameraLocation() {
-
-        // Used for smooth screen movement
+    
+    /** Moves the menu's background around all nice-like :P*/
+    private void updateBackgroundMapLocation() {
+        // Used for smooth map movement
         wait++;
 
-        // Pick a new destination for the camera to move,
-        // This should only evaluate true when the menu first starts (or if a
-        // location happens to be 0,0)
-        if (backgroundTargetX == 0 && backgroundTargetY == 0) {
-            newTarget();
-            ourCamera.setAngle(Math.atan2(backgroundTargetY - ourCamera.getY(), backgroundTargetX
-                    - ourCamera.getX()));
-        }
-        // When a target location is reached, get a new one
-        if (ourCamera.distanceTo(backgroundTargetX, backgroundTargetY) < 20 && wait > 20) {
-            newTarget();
-            ourCamera.setAngle(Math.atan2(backgroundTargetY - ourCamera.getY(), backgroundTargetX
-                    - ourCamera.getX()));
+        /* If a target location is reached and we've waited for a bit
+         OR if the menu is first starting (location is currently (0,0)
+         Then find a new target*/
+        if ((backgroundMap.distanceTo(backgroundTargetX, backgroundTargetY) < 20 && wait > 20)
+        		|| (backgroundTargetX == 0 && backgroundTargetY == 0)) {
+        	newBackgroundMapTarget();
+        	mapBackgroundMovementAngle = Math.atan2(backgroundTargetY-backgroundMap.getY(),backgroundTargetX- backgroundMap.getX());
+        	
             wait = 0;
         }
 
-        // After a slight pause the camera will begin moving to a new
+        // After a slight pause the mapBackground will begin moving to a new
         // destination
         if (wait > 30) {
             // Calculate move speed to previous destination and current
             // destination, choose lower of the two.
-            // This stops the camera from going super fast as soon as it gets a
+            // This stops the mapBackground from going super fast as soon as it gets a
             // new target
-            cameraMoveSpeed = 1 - (1 / (1 + 0.0001 * Math.pow(
-                    ourCamera.distanceTo(backgroundTargetX, backgroundTargetY), 2)));
-            cameraMoveSpeedToPrevious = 1 - (1 / (1 + 0.0001 * Math.pow(
-                    ourCamera.distanceTo(previousTargetX, previousTargetY), 2)));
-            if (cameraMoveSpeedToPrevious < cameraMoveSpeed) {
-                cameraMoveSpeed = cameraMoveSpeedToPrevious;
+            mapBackgroundMoveSpeed = 1 - (1 / (1 + 0.0001 * Math.pow(
+            		backgroundMap.distanceTo(backgroundTargetX, backgroundTargetY), 2)));
+            mapBackgroundMoveSpeedToPrevious = 1 - (1 / (1 + 0.0001 * Math.pow(
+            		backgroundMap.distanceTo(previousTargetX, previousTargetY), 2)));
+            if (mapBackgroundMoveSpeedToPrevious < mapBackgroundMoveSpeed) {
+                mapBackgroundMoveSpeed = mapBackgroundMoveSpeedToPrevious;
             }
-            if (cameraMoveSpeed < 0.1) {
-                cameraMoveSpeed = 0.1;
+            if (mapBackgroundMoveSpeed < 0.1) {
+                mapBackgroundMoveSpeed = 0.1;
             }
             // This is normally done in the update cycle, but we don't need the
             // rest of the stuff in the update cycle, so I just did it here
             // instead.
-            ourCamera.setX(ourCamera.getX() + Math.cos(ourCamera.getAngle()) * cameraMoveSpeed);
-            ourCamera.setY(ourCamera.getY() + Math.sin(ourCamera.getAngle()) * cameraMoveSpeed);
-
+            backgroundMap.setX(backgroundMap.getX() + Math.cos(mapBackgroundMovementAngle) * mapBackgroundMoveSpeed);
+            backgroundMap.setY(backgroundMap.getY() + Math.sin(mapBackgroundMovementAngle) * mapBackgroundMoveSpeed);
         }
-
-        // Calculate the base of our coordinate system relative to our "camera"
-        // location
-        menuShiftX = ourCamera.getX() - WIDTH / 2;
-        menuShiftY = ourCamera.getY() - HEIGHT / 2;
-
-        // Calculate the actual OpenGL location of the camera
-        menuGLScreenLocX = (float) (WIDTH / 2 * magicalScreenSizeNumber - ourCamera.getX()
-                * magicalScreenSizeNumber);
-        menuGLScreenLocY = (float) (-HEIGHT / 2 * magicalScreenSizeNumber + ourCamera.getY()
-                * magicalScreenSizeNumber);
-
     }
-
+    
+    /**
+     * Used to randomly generate a target location for the mapBackground to move to
+     * (overtop of the picture)
+     */
+    private static void newBackgroundMapTarget() {
+        previousTargetX = backgroundTargetX;
+        previousTargetY = backgroundTargetY;
+        backgroundTargetX = rx.nextInt((int) (backgroundMaxX - backgroundMinX)) + backgroundMinX;
+        backgroundTargetY = ry.nextInt((int) (backgroundMaxY - backgroundMinY)) + backgroundMinY;
+        if (Math.abs(previousTargetX - backgroundTargetX) < 150
+                && Math.abs(previousTargetY - backgroundTargetY) < 150) {
+            backgroundTargetX = previousTargetX;
+            backgroundTargetY = previousTargetY;
+            newBackgroundMapTarget();
+        }
+    }
+    
+    
     public void onDrawFrame(GL10 gl) {
 
         // This will be true when the next level is automatically launched
@@ -624,8 +634,8 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
 
         }
 
-        // Calculate the new camera location
-        updateCameraLocation();
+        // Calculate the new mapBackground location
+        updateBackgroundMapLocation();
 
         // Change the menu if the user has pressed a button
         if (USER_MENU_SELECT != 0) {
@@ -648,19 +658,20 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity(); // Reset the Modelview Matrix
 
-        // Move the camera based on our calculations
-        gl.glTranslatef(menuGLScreenLocX, menuGLScreenLocY, (float) -51.6);
-        // CURRENT -51.6
+        //TODO STATIC Z-coord, just used here and in GlRenderer once: -51.6
+        gl.glTranslatef(0, 0, (float) -51.6);
 
         // Don't draw if the menu technically isn't appearing
         if (!startNextLevel) {
             // Draw the map (do it first so it is behind everything else)
-            mapPicture.draw(gl);
+            backgroundMap.draw(gl);
 
             // clickSelection.draw(gl);
 
             // Draw all the menu items
             myMenuState.onDrawFrame(gl, getContext());
+        }else{
+        	//TODO Clear the screen (Currently you CAN see the menu appear while switching levels)
         }
 
     }
@@ -696,7 +707,7 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
     }
 
     private void initShapes(GL10 gl) {
-        mapPicture.initShape(gl, getContext());
+        backgroundMap.initShape(gl, getContext());
         clickSelection.initShape(gl, getContext());
         myMenuState.initiateShapes(gl, getContext());
     }
@@ -707,32 +718,13 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             // Places a Thing at the touch location, can test that for collision
             // against buttons
-            clickSelection.setX(event.getX() + menuShiftX);
-            clickSelection.setY(event.getY() + menuShiftY);
+            clickSelection.setX(event.getX());
+            clickSelection.setY(event.getY());
         }
         return true;
     }
 
-    private static Random rx = new Random();
-    private static Random ry = new Random();
 
-    /**
-     * Used to randomly generate a target location for the camera to move to
-     * (overtop of the picture)
-     */
-    private static void newTarget() {
-        previousTargetX = backgroundTargetX;
-        previousTargetY = backgroundTargetY;
-        backgroundTargetX = rx.nextInt((int) (backgroundMaxX - backgroundMinX)) + backgroundMinX;
-        backgroundTargetY = ry.nextInt((int) (backgroundMaxY - backgroundMinY)) + backgroundMinY;
-
-        if (Math.abs(previousTargetX - backgroundTargetX) < 150
-                && Math.abs(previousTargetY - backgroundTargetY) < 150) {
-            backgroundTargetX = previousTargetX;
-            backgroundTargetY = previousTargetY;
-            newTarget();
-        }
-    }
 
     public static void showCredits(Context context) {
         GlRenderer.setNextLevel(101);
