@@ -52,7 +52,7 @@ public class Frigate extends Thing{
         //For collisions by section
         double tempQuarterBoxWidth = 0.42*adjustedBoxWidth;
         double tempQuarterBoxHeight = 0.42*adjustedBoxHeight;
-        quarterHypo = Math.hypot(tempQuarterBoxWidth, tempQuarterBoxHeight)/2;
+        quarterHypo = myHpyot(tempQuarterBoxWidth, tempQuarterBoxHeight)/2;
         quarterLowerHypo=Math.min((tempQuarterBoxHeight  / 2.0), (tempQuarterBoxWidth / 2.0));
 	}
 	
@@ -216,10 +216,12 @@ public class Frigate extends Thing{
         	
         	
             //Do a quick radius check. (ie. if 'far away').
-            centerDist1 = Math.hypot((xCollisionCoord1 - other.getX()),(yCollisionCoord1 - other.getY()));
-	        centerDist2 = Math.hypot((xCollisionCoord2 - other.getX()),(yCollisionCoord2 - other.getY()));
-	        centerDist3 = Math.hypot((xCollisionCoord3 - other.getX()),(yCollisionCoord3 - other.getY()));
-	        centerDist4 = Math.hypot((xCollisionCoord4 - other.getX()),(yCollisionCoord4 - other.getY()));
+        	// TODO this custom collision code bothers me...
+        	
+            centerDist1 = myHpyot((xCollisionCoord1 - other.getX()),(yCollisionCoord1 - other.getY()));
+	        centerDist2 = myHpyot((xCollisionCoord2 - other.getX()),(yCollisionCoord2 - other.getY()));
+	        centerDist3 = myHpyot((xCollisionCoord3 - other.getX()),(yCollisionCoord3 - other.getY()));
+	        centerDist4 = myHpyot((xCollisionCoord4 - other.getX()),(yCollisionCoord4 - other.getY()));
 	           
 	        if (centerDist1 > this.quarterHypo + other.getCollisionH()&&
 	            centerDist2 > this.quarterHypo + other.getCollisionH()&&

@@ -54,15 +54,12 @@ public class Thing {
     public int getCollisionBoxHeight() 	{return adjustedBoxHeight;}
 
     private double collisionH;
-	public double getCollisionH(){return collisionH;}
+    public double getCollisionH(){return collisionH;}
     private double collisionLH;
 	public double getCollisionLH(){return collisionLH;}
     private double collisionXs[];
-	protected double[] getCollisionXs(){return collisionXs;}
     private double collisionYs[];
-	protected double[] getCollisionYs(){return collisionYs;}
 	private MyPoly collisionPoly;
-	protected MyPoly getCollisionPoly(){return collisionPoly;}
     
     public enum State {
         RESPAWNING, ALIVE, DYING, DEAD
@@ -117,7 +114,7 @@ public class Thing {
         adjustedBoxWidth = (int) (width*GlMainMenu.widthScale);
         adjustedBoxHeight = (int) (height*GlMainMenu.heightScale);
     	mySquare=new Visual(bitmap,width,height);
-        this.collisionH= Math.hypot(this.adjustedBoxWidth, this.adjustedBoxHeight)/2.0;
+        this.collisionH= myHpyot(this.adjustedBoxWidth, this.adjustedBoxHeight)/2.0;
         this.collisionLH= Math.min((this.adjustedBoxHeight / 2.0), (this.adjustedBoxWidth / 2.0));
         this.collisionXs = new double[4];
         this.collisionYs = new double[4];
@@ -185,10 +182,10 @@ public class Thing {
         }
     }
 
-    protected static double a1;
-    protected static double a2;
-    protected static double a3;
-    protected static double a4;
+    private static double a1;
+    private static double a2;
+    private static double a3;
+    private static double a4;
     
     protected static double updateDirX;
     protected static double updateDirY;
@@ -196,28 +193,17 @@ public class Thing {
     protected static double updateLeadScale;
     protected static double updateTheta;
     
+    /**
+     * Ensure to call updateCollisionPolygon() during the ALIVE state
+     * TODO do this in a cleaner way? A call should be mandatory...
+     */
     public void update() {
         if (this.state == State.ALIVE) {
         	
 		    x += Math.cos(angle)*adjustedMoveSpeed;
          	y += Math.sin(angle)*adjustedMoveSpeed;        
             
-          	a1 = this.angle+ (Math.atan2(this.adjustedBoxHeight / 2.0, this.adjustedBoxWidth / 2.0));
-        	a2 = this.angle+ (Math.atan2(this.adjustedBoxHeight / 2.0, -this.adjustedBoxWidth / 2.0));
-        	a3 = this.angle+ (Math.atan2(-this.adjustedBoxHeight / 2.0, -this.adjustedBoxWidth / 2.0));
-        	a4 = this.angle+ (Math.atan2(-this.adjustedBoxHeight / 2.0, this.adjustedBoxWidth / 2.0));
-            
-        	getCollisionXs()[0]=Math.cos(a1) * this.getCollisionH() + this.x;
-        	getCollisionXs()[1]=Math.cos(a2) * this.getCollisionH() + this.x;
-        	getCollisionXs()[2]=Math.cos(a3) * this.getCollisionH() + this.x;
-        	getCollisionXs()[3]=Math.cos(a4) * this.getCollisionH() + this.x;
-        	
-        	getCollisionYs()[0]=Math.sin(a1) * this.getCollisionH() + this.y;
-        	getCollisionYs()[1]=Math.sin(a2) * this.getCollisionH() + this.y;
-        	getCollisionYs()[2]=Math.sin(a3) * this.getCollisionH() + this.y;
-        	getCollisionYs()[3]=Math.sin(a4) * this.getCollisionH() + this.y;
-            
-        	getCollisionPoly().setPolyArrays(getCollisionXs(), getCollisionYs());
+         	updateCollisionPolygon();
 
             if (this.respawning < 12)
                 this.respawning = this.respawning + 1;// prevents collision
@@ -233,7 +219,37 @@ public class Thing {
         }
         
     }
+    
+    /**
+     * Must be called from within update()
+     */
+    protected void updateCollisionPolygon(){
+      	a1 = this.angle+ (Math.atan2(this.adjustedBoxHeight / 2.0, this.adjustedBoxWidth / 2.0));
+    	a2 = this.angle+ (Math.atan2(this.adjustedBoxHeight / 2.0, -this.adjustedBoxWidth / 2.0));
+    	a3 = this.angle+ (Math.atan2(-this.adjustedBoxHeight / 2.0, -this.adjustedBoxWidth / 2.0));
+    	a4 = this.angle+ (Math.atan2(-this.adjustedBoxHeight / 2.0, this.adjustedBoxWidth / 2.0));
+        
+    	collisionXs[0]=Math.cos(a1) * collisionH + this.x;
+    	collisionXs[1]=Math.cos(a2) * collisionH + this.x;
+    	collisionXs[2]=Math.cos(a3) * collisionH + this.x;
+    	collisionXs[3]=Math.cos(a4) * collisionH + this.x;
+    	
+    	collisionYs[0]=Math.sin(a1) * collisionH + this.y;
+    	collisionYs[1]=Math.sin(a2) * collisionH + this.y;
+    	collisionYs[2]=Math.sin(a3) * collisionH + this.y;
+    	collisionYs[3]=Math.sin(a4) * collisionH + this.y;
+        
+    	collisionPoly.setPolyArrays(collisionXs, collisionYs);
+    }
 
+    /**
+     * Math.hypot is very slow cause it does safety checks, etc. for over/underflow
+     * Replacing with my own...
+     */
+    protected double myHpyot(double x, double y){
+    	return Math.sqrt(x*x + y*y);
+    	
+    }
     
     static double centerDist;
     public boolean hasCollided(Thing other, boolean useExact) {
@@ -241,14 +257,15 @@ public class Thing {
         if (this.state == State.ALIVE && other.state == State.ALIVE) {
 
             // First do a quick radius check. (ie. if 'far away').
-            centerDist = Math.hypot(
-                    (this.x - other.getX()),
-                    (this.y - other.getY()));
-            if (centerDist > this.getCollisionH() + other.getCollisionH()) {
+            //centerDist = Math.hypot((this.x - other.x),(this.y - other.y));
+            //centerDist = Math.sqrt((this.x - other.x)*(this.x - other.x) + (this.y - other.y)*(this.y - other.y));
+            centerDist = myHpyot((this.x - other.x), (this.y - other.y));
+            
+            if (centerDist > this.collisionH + other.collisionH) {
                 return false;
             }
             // definitely collided check
-            if (centerDist < (other.getCollisionLH() + this.getCollisionLH())) {
+            if (centerDist < (other.collisionLH + this.collisionLH)) {
                 return true;
             }
 
@@ -259,12 +276,13 @@ public class Thing {
             	// TODO: Jeremy, can you think of a situation where this doesn't
             	// hold?
             	for (int i = 0; i < 4; i++) {
-            		if (this.getCollisionPoly().containsPoint(other.getCollisionXs()[i], other.getCollisionYs()[i])) {
+            		if (collisionPoly.containsPoint(collisionXs[i], other.collisionYs[i])) {
             			return true;
             		}
-            		if (other.getCollisionPoly().containsPoint(this.getCollisionXs()[i], this.getCollisionYs()[i])) {
+            		/*TODO dead code? too lazy to see if we actually need this
+            		if (other.getCollisionPoly().containsPoint(collisionXs[i], this.getCollisionYs()[i])) {
             			return true;
-            		}
+            		}*/
             	}
             	return false;
             }//If useExact   
@@ -342,8 +360,8 @@ public class Thing {
             for (int i = 0; i < 4; i++) {
                 int j = (i + 1) % 4; // vector 2
                 dot = vxs[i] * vxs[j] + vys[i] * vys[j];
-                h1 = Math.hypot(vxs[i], vys[i]);
-                h2 = Math.hypot(vxs[j], vys[j]);
+                h1 = myHpyot(vxs[i], vys[i]);
+                h2 = myHpyot(vxs[j], vys[j]);
                 ang = Math.acos(dot / (h1 * h2));
                 // if (ang > Math.PI) {
                 // return false;

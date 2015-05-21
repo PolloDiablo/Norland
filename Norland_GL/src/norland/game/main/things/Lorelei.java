@@ -100,22 +100,7 @@ public class Lorelei extends Thing {
 			   
 		    }
 
-		    a1 = this.getAngle()+ (Math.atan2(this.adjustedBoxHeight / 2.0, this.adjustedBoxWidth / 2.0));
-		    a2 = this.getAngle()+ (Math.atan2(this.adjustedBoxHeight / 2.0, -this.adjustedBoxWidth / 2.0));
-		    a3 = this.getAngle()+ (Math.atan2(-this.adjustedBoxHeight / 2.0, -this.adjustedBoxWidth / 2.0));
-		    a4 = this.getAngle()+ (Math.atan2(-this.adjustedBoxHeight / 2.0, this.adjustedBoxWidth / 2.0));
-		            
-		    getCollisionXs()[0]=Math.cos(a1) * this.getCollisionH() + this.getX();
-		    getCollisionXs()[1]=Math.cos(a2) * this.getCollisionH() + this.getX();
-		    getCollisionXs()[2]=Math.cos(a3) * this.getCollisionH() + this.getX();
-		    getCollisionXs()[3]=Math.cos(a4) * this.getCollisionH() + this.getX();
-		        	
-		    getCollisionYs()[0]=Math.sin(a1) * this.getCollisionH() + this.getY();
-		    getCollisionYs()[1]=Math.sin(a2) * this.getCollisionH() + this.getY();
-		    getCollisionYs()[2]=Math.sin(a3) * this.getCollisionH() + this.getY();
-		    getCollisionYs()[3]=Math.sin(a4) * this.getCollisionH() + this.getY();
-		            
-		    getCollisionPoly().setPolyArrays(getCollisionXs(), getCollisionYs());
+         	updateCollisionPolygon();
 		    
 		    if (this.respawning < 12)
 		    	this.respawning = this.respawning + 1;// prevents collision
