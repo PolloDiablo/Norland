@@ -6,7 +6,6 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.opengl.GLUtils;
 
 /**Visuals have no angle (always 0)*/
 public class Visual{
@@ -17,7 +16,6 @@ public class Visual{
 	protected Bitmap getBitmap(){
 		return bitmap;
 	}
-	private boolean firstDraw;
 	
 	//These represent the center of the square in the drawing world
 	private double GLdrawX;
@@ -32,10 +30,11 @@ public class Visual{
 	};
 	private int adjustedWidthHalf;
 	private int adjustedHeightHalf;
+	
+	private int textureIndex;
 
 
 	public Visual(Bitmap bitmap, double width, double height){
-		firstDraw=true;
 		this.bitmap = bitmap;
 	    this.adjustedWidthHalf = (int)(width*GlMainMenu.widthScale/2);
 	    this.adjustedHeightHalf = (int)(height*GlMainMenu.heightScale/2);    
@@ -61,16 +60,21 @@ public class Visual{
 	    textureBuffer = vbb.asFloatBuffer();
 	    textureBuffer.put(texture);
 	    textureBuffer.position(0);
+			
+	    textureIndex = TextureStore.requestTexture(gl,bitmap);
 	    
+	    
+	    /*
+		// generate one texture pointer
+		gl.glGenTextures(1, this.textures, 0);
 		// bind the previously generated texture
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
-		// DO this instead maybe: loadGLTexture(gl, context);	
-		
-		//TODO: was in draw...maybe this will work...
-		if(firstDraw){
-			loadGLTexture(gl, context);	
-			firstDraw=false;	
-		}
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, this.textures[0]);
+		// create nearest filtered texture
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		// Use Android GLUtils to specify a two-dimensional texture image from our bitmap
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, this.bitmap, 0);*/
+			
 		
 	}
 
@@ -81,7 +85,7 @@ public class Visual{
 		
 		gl.glPushMatrix();
 			gl.glTranslatef((float)GLdrawX,(float) -GLdrawY, 0);
-			gl.glBindTexture(GL10.GL_TEXTURE_2D, this.textures[0]);
+			gl.glBindTexture(GL10.GL_TEXTURE_2D, TextureStore.getTexture(textureIndex));
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, this.vertexBuffer);
 			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, this.textureBuffer);
 			// Draw the vertices as triangle strip
@@ -99,7 +103,7 @@ public class Visual{
 			//Translate and rotate mesh to desired location
 			gl.glTranslatef((float) (+GLdrawX), (float) (-GLdrawY), 0);
 			gl.glRotatef(-(float)(Math.toDegrees(angle)), 0 , 0, 1);
-			gl.glBindTexture(GL10.GL_TEXTURE_2D, this.textures[0]);
+			gl.glBindTexture(GL10.GL_TEXTURE_2D, TextureStore.getTexture(textureIndex));
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, this.vertexBuffer);
 			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, this.textureBuffer);
 			// Draw the vertices as triangle strip
@@ -113,17 +117,5 @@ public class Visual{
 	protected double fudgeY(double y){
 		return y-GlRenderer.HEIGHT_HALF;
 	}
-	
-	protected void loadGLTexture(GL10 gl, Context context) {
-		// generate one texture pointer
-		gl.glGenTextures(1, this.textures, 0);
-		// ...and bind it to our array
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, this.textures[0]);
-		// create nearest filtered texture
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		// Use Android GLUtils to specify a two-dimensional texture image from our bitmap
-		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, this.bitmap, 0);
-	}	
 	
 }

@@ -473,6 +473,8 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
         bitmapHighScores = BitmapFactory
                 .decodeResource(getResources(), R.drawable.menut_highscores);
 
+        TextureStore.resetTextures();
+        
         // Initialize background image.
         // Want to scale at least 2x in both dimensions.
         final double mapWidth = 2*bitmapBackground.getWidth();
@@ -654,12 +656,7 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
 		clickSelection.setY(10000);
 
         // OpenGL magic
-        gl.glClearColorx(50, 50, 50, 1);
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-        gl.glLoadIdentity(); // Reset the Modelview Matrix
-
-        //TODO STATIC Z-coord, just used here and in GlRenderer once: -51.6
-        gl.glTranslatef(0, 0, (float) -51.6);
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); // Calling this each frame should improve performance
 
         // Don't draw if the menu technically isn't appearing
         if (!startNextLevel) {
@@ -691,19 +688,36 @@ public class GlMainMenu extends GLSurfaceView implements Renderer {
     /** Called when the menu starts */
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         gl.glEnable(GL10.GL_TEXTURE_2D); // Enable Texture Mapping ( NEW )
-        gl.glShadeModel(GL10.GL_SMOOTH); // Enable Smooth Shading
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 1f); // Black Background
+        gl.glShadeModel(GL10.GL_FLAT); // Enable Flat Shading (should be more efficient than smooth shading)
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1f); // Black Background
         gl.glClearDepthf(1.0f); // Depth Buffer Setup
         gl.glEnable(GL10.GL_DEPTH_TEST); // Enables Depth Testing
         gl.glDepthFunc(GL10.GL_LEQUAL); // The Type Of Depth Testing To Do
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        // Really Nice Perspective Calculations
-        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+        
+        // TODO Making things efficient, screw graphics
+        // https://www.opengl.org/sdk/docs/man2/xhtml/glEnable.xml
+        gl.glDisable(GL10.GL_LIGHTING);
+        gl.glDisable(GL10.GL_LINE_SMOOTH);
+        gl.glDisable(GL10.GL_POINT_SMOOTH);
+        
+        // https://www.opengl.org/sdk/docs/man2/xhtml/glHint.xml
+        gl.glHint(GL10.GL_FOG_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_POINT_SMOOTH_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_POLYGON_SMOOTH_HINT, GL10.GL_FASTEST);
+
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         initializeEverything();
         initShapes(gl);
+        
+        // The menu screen camera does not move (unlike the camera which follows your boat in the game)
+        // Therefore, we only need to do this once! :D
+        gl.glLoadIdentity(); // Reset the Modelview Matrix
+        gl.glTranslatef(0, 0, (float) -51.6); //TODO STATIC Z-coord, just used here and in GlRenderer once: -51.6
     }
 
     private void initShapes(GL10 gl) {

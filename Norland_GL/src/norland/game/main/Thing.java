@@ -162,11 +162,10 @@ public class Thing {
 
         /* If object is alive, draw it */
         if (this.state == State.ALIVE || this.state == State.RESPAWNING) {
-        	
-        	gl.glEnable(GL10.GL_BLEND);
         	gl.glColor4f(alpha,alpha,alpha,alpha);  	
             mySquare.draw(gl, x, y, angle);
         }
+        
         /* If object is dying, draw the death animation */
         if (this.state == State.DYING) {
             deathSequence(gl);

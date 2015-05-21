@@ -152,7 +152,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
     public static Bitmap bitmapLoreleiProj;
     private static Bitmap bitmapDuck;
     public static Bitmap bitmapIsland1;
-
+   
     // public static Bitmap bitmapCompass;
     public static Bitmap bitmapCompassPointer;
     public static boolean showCompass;
@@ -296,6 +296,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
         shipLeadY = HEIGHT_HALF;
 
         initializeBitmaps();
+        TextureStore.resetTextures();
 
         r = new Random();
 
@@ -918,7 +919,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
         gl.glEnable(GL10.GL_TEXTURE_2D); // Enable Texture Mapping ( NEW )
-        gl.glShadeModel(GL10.GL_SMOOTH); // Enable Smooth Shading
+        gl.glShadeModel(GL10.GL_FLAT); // Enable Smooth Shading
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1f); // Black Background
         gl.glClearDepthf(1.0f); // Depth Buffer Setup
         gl.glEnable(GL10.GL_DEPTH_TEST); // Enables Depth Testing
@@ -927,9 +928,19 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
         // http://stackoverflow.com/questions/2361602/transparent-texture-in-opengl-es-for-android
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
-        // Really Nice Perspective Calculations
-        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+        
+        // TODO Making things efficient, screw graphics
+        // https://www.opengl.org/sdk/docs/man2/xhtml/glEnable.xml
+        gl.glDisable(GL10.GL_LIGHTING);
+        gl.glDisable(GL10.GL_LINE_SMOOTH);
+        gl.glDisable(GL10.GL_POINT_SMOOTH);
+        
+        // https://www.opengl.org/sdk/docs/man2/xhtml/glHint.xml
+        gl.glHint(GL10.GL_FOG_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_POINT_SMOOTH_HINT, GL10.GL_FASTEST);
+        gl.glHint(GL10.GL_POLYGON_SMOOTH_HINT, GL10.GL_FASTEST);
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -1039,7 +1050,7 @@ public class GlRenderer extends GLSurfaceView implements Renderer {
     public boolean onTouchEvent(final MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            Log.d("GlRenderer", "Touch Event");
+            //Log.d("GlRenderer", "Touch Event");
             // Only create projectiles and stuff if update() has called at least once
             if (hasFinishedLoading) {
                 if (!runningUpgradeScreen) {
