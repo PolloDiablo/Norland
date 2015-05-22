@@ -10,7 +10,6 @@ import norland.game.main.GlRenderer;
 import norland.game.main.MainMenu_Activity;
 import norland.game.main.R;
 import norland.game.main.Thing;
-import norland.game.main.UpgradeMain;
 import norland.game.main.VisualDynamic;
 import norland.game.main.projectiles.Projectile;
 import norland.game.main.things.Frigate;
@@ -111,7 +110,6 @@ public class level08 extends LevelSuper{
     public void initiateShapes(GL10 gl,Context context){
     	super.initiateShapes(gl, context);
     	objectiveNum.initShape(gl, context);
-		objectiveNum.createBitmap(gl, context,  R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
 		boss.initShape(gl, context);
     }
     

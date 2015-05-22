@@ -10,7 +10,6 @@ import norland.game.main.MainMenu_Activity;
 import norland.game.main.R;
 import norland.game.main.Thing;
 import norland.game.main.Tips;
-import norland.game.main.UpgradeMain;
 import norland.game.main.VisualDynamic;
 import norland.game.main.things.Dragon;
 import android.content.Context;
@@ -95,7 +94,6 @@ public class level09 extends LevelSuper{
     public void initiateShapes(GL10 gl,Context context){
     	super.initiateShapes(gl, context);
     	objectiveNum.initShape(gl, context);
-		objectiveNum.createBitmap(gl, context,  R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
     }
 
 	public void finishLevel(Context context) {

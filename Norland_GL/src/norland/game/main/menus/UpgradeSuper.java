@@ -5,9 +5,7 @@ import java.util.Set;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import norland.game.main.R;
 import norland.game.main.Thing;
-import norland.game.main.UpgradeMain;
 import norland.game.main.VisualDynamic;
 import android.content.Context;
 
@@ -48,7 +46,6 @@ public abstract class UpgradeSuper{
 		}
 		for(VisualDynamic v : visuals){
 			v.initShape(gl, context);
-			v.createBitmap(gl, context,  R.drawable.upgrade_blanknumber,UpgradeMain.textSize);
 		}
 	}
 	

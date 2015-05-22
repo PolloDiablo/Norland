@@ -31,7 +31,7 @@ public class Visual{
 	private int adjustedWidthHalf;
 	private int adjustedHeightHalf;
 	
-	private int textureIndex;
+	protected int textureIndex;
 
 
 	public Visual(Bitmap bitmap, double width, double height){

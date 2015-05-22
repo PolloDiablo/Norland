@@ -9,7 +9,6 @@ public class UpgradeMain {
 
     public final static int upperNumOffset = 225;
     public final static int numOffset = 66;
-    public final static int textSize = 45;
 
     public static void applyUpgrades(Context context) {
 

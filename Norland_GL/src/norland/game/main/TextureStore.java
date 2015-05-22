@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class TextureStore {
 
-	private static final int MAX_TEXTURES = 100;
+	private static final int MAX_TEXTURES = 200;
 	private static int[] textures = new int[MAX_TEXTURES];
 	private static ArrayList<Bitmap> currentBitmaps = new ArrayList<Bitmap>();
 
